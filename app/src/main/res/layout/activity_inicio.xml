@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/drawerlayout"
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:openDrawer="start"
+    tools:context=".activities.InicioActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/mapview"
+            tools:context=".MapsActivity"
+            android:name="com.google.android.gms.maps.SupportMapFragment" />
+        <include layout="@layout/appbar_toolbar_mapview">
+        </include>
+        <include
+            android:id="@+id/id_container_start_end_position"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="?actionBarSize"
+            layout="@layout/view_inicio_destino"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+        </include>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/id_btn_gotoTaxi"
+            android:text="@string/text_boton_solicitar"
+            android:layout_gravity="bottom"
+            android:layout_margin="?actionBarSize"
+            android:background="@drawable/round_boton"
+            android:backgroundTint="@color/colorPrimaryLight"
+            android:textColor="@color/colorSecondaryText"
+            android:textStyle="bold"
+            android:textSize="@dimen/textsize_btn_solicitar_taxi"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+        </androidx.appcompat.widget.AppCompatButton>
+
+    </FrameLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        app:headerLayout="@layout/header_menu"
+        app:menu="@menu/menu_drawer_clients"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+    </com.google.android.material.navigation.NavigationView>
+</androidx.drawerlayout.widget.DrawerLayout>

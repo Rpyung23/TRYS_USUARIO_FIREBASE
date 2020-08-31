@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryDark">#09587E</color>
+    <color name="colorPrimaryLight">#268CBD</color>
+    <color name="colorWhiteTrasparencia0">#00FFFFFF</color>
+    <color name="colorSecondaryText">#FFFFFF</color>
+    <color name="colorPrimaryText">#000000</color>
+    <color name="colorAccent">#5909587E</color>
+    <color name="colorPrimary">#3700B3</color>
+    <color name="colorDivCar">#e8873a</color>
+    <color name="colorBotonCancelarOcupadoTerminar">#E32323</color>
+    <color name="colorBorderBotonCancelarOcupadoTerminar">#B60808</color>
+
+    <color name="colorBotonCancelarOcupadoTerminarEmergence">#E32323</color>
+    <color name="colorBorderBotonCancelarOcupadoTerminarEmergence">#B60808</color>
+</resources>

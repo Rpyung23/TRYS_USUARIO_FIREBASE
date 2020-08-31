@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">TRYS</string>
+    <string name="text_olvide_password">Olvidaste tu contraseña</string>
+    <string name="text_boton_registro">REGISTRAR</string>
+    <string name="text_boton_login">LOGIN</string>
+    <string name="hint_ingrese_su_name">Ingrese sus nombres</string>
+    <string name="hint_last_name">Ingrese su apellido</string>
+    <string name="hint_ingrese_mail">Ingrese su correo</string>
+    <string name="hint_password">Ingrese su password</string>
+    <string name="hint_phone">Ingrese su telefono</string>
+    <string name="toolbar_regitro_client">NUEVO CLIENTE</string>
+    <string name="api_key_google_maps">AIzaSyDs5T_D-OuX1IHCOoPMsNdtcKuVtc_J1dE</string>
+    <string name="vacio" />
+    <string name="text_boton_solicitar">SOLICITAR</string>
+    <string name="text_cancelar_boton">CANCELAR</string>
+    <string name="text_confirmar_boton">CONFIRMAR</string>
+    <string name="string_taxi_cercano">BUSCANDO TAXI MAS CERCANO</string>
+    <string name="url_create_FCM">http://192.168.1.2/TrysService/Firebase_/create_solicitud.php</string>
+</resources>

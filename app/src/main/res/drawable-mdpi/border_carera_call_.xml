@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="oval"
+            >
+            <solid
+                android:color="@color/colorPrimaryLight"
+                >
+            </solid>
+            <stroke
+                android:color="@color/colorPrimaryDark"
+                android:width="@dimen/stroke_botones_redondos_en_carrera_celestes"
+                >
+            </stroke>
+        </shape>
+    </item>
+    <item
+        android:drawable="@drawable/icono_call"
+        android:gravity="center"
+        android:left="@dimen/margen_left_right_top_bottom_datos_usuario"
+        android:right="@dimen/margen_left_right_top_bottom_datos_usuario"
+        android:top="@dimen/margen_left_right_top_bottom_datos_usuario"
+        android:bottom="@dimen/margen_left_right_top_bottom_datos_usuario"
+        >
+    </item>
+</layer-list>

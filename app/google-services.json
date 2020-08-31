@@ -1,0 +1,122 @@
+{
+  "project_info": {
+    "project_number": "886319270769",
+    "firebase_url": "https://trys-19c9e.firebaseio.com",
+    "project_id": "trys-19c9e",
+    "storage_bucket": "trys-19c9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886319270769:android:19292369cc2e5ad79584d0",
+        "android_client_info": {
+          "package_name": "com.virtualcode7ecuadorvigitrack.trys"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886319270769-g77b8tgemc372sovkd64kli8ds18v3eb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.virtualcode7ecuadorvigitrack.trys",
+            "certificate_hash": "d41ab385a7fae4ae57bb8065691ae2c73e856ca4"
+          }
+        },
+        {
+          "client_id": "886319270769-9us91rv1g7evke9jathgigumoti16b1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gszIf6egH9MTQ465aVUVBELX3gmdWiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886319270769-9us91rv1g7evke9jathgigumoti16b1v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886319270769:android:50ac8845c03ffcd69584d0",
+        "android_client_info": {
+          "package_name": "com.virtualcode7vigitrack.mitaxiconductor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886319270769-4konqhjl5q21mb087i86pnhn98s8hg8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.virtualcode7vigitrack.mitaxiconductor",
+            "certificate_hash": "d41ab385a7fae4ae57bb8065691ae2c73e856ca4"
+          }
+        },
+        {
+          "client_id": "886319270769-9us91rv1g7evke9jathgigumoti16b1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gszIf6egH9MTQ465aVUVBELX3gmdWiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886319270769-9us91rv1g7evke9jathgigumoti16b1v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886319270769:android:076672419496f8b09584d0",
+        "android_client_info": {
+          "package_name": "com.virtualcode7vigitrack.mitaxiusuario"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886319270769-bua9isr00i88cvobtq12c9ngkn8gi80j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.virtualcode7vigitrack.mitaxiusuario",
+            "certificate_hash": "d41ab385a7fae4ae57bb8065691ae2c73e856ca4"
+          }
+        },
+        {
+          "client_id": "886319270769-9us91rv1g7evke9jathgigumoti16b1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gszIf6egH9MTQ465aVUVBELX3gmdWiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886319270769-9us91rv1g7evke9jathgigumoti16b1v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

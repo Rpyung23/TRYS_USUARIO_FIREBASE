@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SoliciteTaxiActivity">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+            <com.github.florent37.shapeofview.shapes.ArcView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="4dp"
+                app:shape_arc_cropDirection="outside"
+                app:shape_arc_height="25dp"
+                app:shape_arc_position="bottom"
+                >
+                <View
+                    android:background="@color/colorPrimaryLight"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </View>
+            </com.github.florent37.shapeofview.shapes.ArcView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+            <TextView
+                android:id="@+id/id_textview_estado_solicitud"
+                android:layout_margin="25dp"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textSize="@dimen/text_size_taxi_cercano"
+                android:gravity="center"
+                android:text="@string/string_taxi_cercano"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/animation_view"
+        android:scaleType="centerCrop"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        app:lottie_fileName="taxi.json"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true" />
+    <TextView
+        android:id="@+id/id_textview_cont_tiempo"
+        android:layout_gravity="center"
+        android:layout_marginBottom="110dp"
+        android:textColor="@color/colorSecondaryText"
+        android:textStyle="bold"
+        android:textSize="60sp"
+        android:text="23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </TextView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
