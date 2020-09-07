@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/id_camera_chats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/colorPrimaryDark"
+            app:srcCompat="@drawable/gallery_camera"
+            app:tint="@color/colorSecondaryText"
+            app:backgroundTint="@color/colorSecondaryText"
+            android:foregroundTint="@color/colorSecondaryText"
+            >
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+
+        <EditText
+            android:id="@+id/id_edittext_chats"
+            android:padding="7dp"
+            android:layout_margin="5dp"
+            android:hint="@string/hint_enter_a_message"
+            android:textSize="19sp"
+            android:maxLines="4"
+            android:background="@drawable/round_chat"
+            android:layout_weight="0.5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </EditText>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/id_botton_send_chats"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/send"
+            android:layout_weight="0.25"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+        </androidx.appcompat.widget.AppCompatButton>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

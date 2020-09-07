@@ -26,4 +26,8 @@ public class cClientProvider
         hashMap.put("Phone",Ou.getPhone());
         return mDatabaseReference.child("Clients").child(Ou.getId_token_()).setValue(hashMap);
     }
+
+    public DatabaseReference getmDatabaseReference() {
+        return mDatabaseReference;
+    }
 }

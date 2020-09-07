@@ -44,4 +44,5 @@ dependencies {
     implementation 'com.firebase:geofire-java:3.0.0'
     implementation 'com.google.firebase:firebase-messaging:20.2.4'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.github.stfalcon:chatkit:0.3.3'
 }

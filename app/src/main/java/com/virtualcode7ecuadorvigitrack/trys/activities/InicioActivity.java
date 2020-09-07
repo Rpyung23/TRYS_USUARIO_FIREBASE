@@ -58,6 +58,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.virtualcode7ecuadorvigitrack.trys.R;
 import com.virtualcode7ecuadorvigitrack.trys.includes.cToolbar;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderWorking;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cGeoFire;
 import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTrazos;
 
@@ -79,7 +80,6 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     private SupportMapFragment mSupportMapFragment;
     private DrawerLayout mDrawerLayout;
     private View mView_start_end;
-    private View view_alert;
     private LocationRequest mLocationRequest;/**CONFIGURACIONES PARA OBTENER LAS POSICIIONES**/
     private FusedLocationProviderClient mFusedLocationProviderClient;/**LLAMA A LAS POSICIONES DEL LOCATION CALLBACK**/
 
@@ -105,15 +105,15 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private Button mButtonGotoTaxi;
 
-
-    private AlertDialog alertDialog_showPreviewSolicitud;
-
+    private cFirebaseProviderWorking mFirebaseProviderWorking;
 
     private cRunnableTrazos mRunnableTrazos;
 
+    private Marker mMarkerDriving;
 
+    private AlertDialog alertDialog_showPreviewSolicitud;
 
-
+    private ValueEventListener mValueEventListenerAllDriving;
 
     LocationCallback mLocationCallback = new LocationCallback()
     {
@@ -177,6 +177,9 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         mEditTextMyDestino = findViewById(R.id.id_edittext_mi_destino);
         mButtonGotoTaxi = findViewById(R.id.id_btn_gotoTaxi);
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
+
+        mFirebaseProviderWorking = new cFirebaseProviderWorking();
+
         configurarDrawerLayout();
         Places.initialize(InicioActivity.this,getString(R.string.api_key_google_maps));
         mFusedLocationProviderClient = LocationServices
@@ -236,8 +239,9 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void showAlertDialogPreviewSolicitud()
     {
-        view_alert = LayoutInflater.from(InicioActivity.this).inflate(R.layout.view_preview_solicitud
+        View view_alert = LayoutInflater.from(InicioActivity.this).inflate(R.layout.view_preview_solicitud
                 ,null);
+
         TextView textView_start = view_alert.findViewById(R.id.id_textview_incio_solicitud);
         TextView textView_end = view_alert.findViewById(R.id.id_text_destino_solicitud);
         TextView textView_time = view_alert.findViewById(R.id.id_text_tiempo_solicitud);
@@ -274,6 +278,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             DecimalFormat priceFormat = new DecimalFormat("#.##", separadoresPersonalizados);
                             Intent intent = new Intent(InicioActivity.this,
                                     SoliciteTaxiActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.putExtra("lat_start",markerIam.getPosition().latitude);
                             intent.putExtra("long_start",markerIam.getPosition().longitude);
                             intent.putExtra("lat_end",markerIamDestino.getPosition().latitude);
@@ -286,6 +291,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             intent.putExtra("token_phone_client",String.valueOf(snapshot.child("token")
                                     .getValue().toString()));
                             startActivity(intent);
+                            alertDialog_showPreviewSolicitud.cancel();
                         }
                     }
                     @Override
@@ -295,6 +301,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                 });
             }
         });
+
         alertDialog_showPreviewSolicitud = builder.create();
         alertDialog_showPreviewSolicitud.show();
     }
@@ -325,6 +332,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         mLocationRequest.setSmallestDisplacement(5);
         mRunnableTrazos = new cRunnableTrazos(InicioActivity.this,mGoogleMap);
         startLocationClient();
+        readingGpsAllWorking();
     }
 
     private void startLocationClient()
@@ -422,6 +430,45 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onPostResume();
     }
 
+    private void readingGpsAllWorking()
+    {
+        mValueEventListenerAllDriving = mFirebaseProviderWorking.getmDatabaseReference().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                if (snapshot.exists())
+                {
+                    for (DataSnapshot snapshot1 : snapshot.getChildren())
+                    {
+                        if (mMarkerDriving!=null)
+                        {
+                            mMarkerDriving.remove();
+                        }
+                        Log.e("KEY",snapshot1.getKey());
+                        mMarkerDriving = mGoogleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(Double.parseDouble(snapshot1.child("l").child("0").getValue().toString()),
+                                   Double.parseDouble(snapshot1.child("l").child("1").getValue()
+                                     .toString())))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo)));
+                    }
+                    //Log.e("l",snapshot.child("l").child("0").getValue().toString());
+                }else
+                    {
+                        if (mMarkerDriving!=null)
+                        {
+                            mMarkerDriving.remove();
+                        }
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error)
+            {
+
+            }
+        });
+    }
+
     private void verificarBooking()
     {
         FirebaseDatabase mFirebaseDatabaseV = FirebaseDatabase.getInstance();
@@ -436,11 +483,13 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                     for (DataSnapshot snapshot1 : snapshot.getChildren())
                     {
                         String key = snapshot1.child("id_client").getValue().toString();
-                        if (key.equals(mFirebaseProviderAuth.getmFirebaseAuth().getUid()))
+                        if (key.equals(mFirebaseProviderAuth.getmFirebaseAuth().getUid()) &&
+                                snapshot1.child("status").getValue().toString().equals("create"))
                         {
                             Intent intent_ = new Intent(InicioActivity.this
                                     ,BookingActivity.class);
 
+                            intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent_.putExtra("id_driver",snapshot1.child("id_driver").getValue().toString());
                             intent_.putExtra("latitud_start",Double.parseDouble(snapshot1.child("latitud_start")
                                     .getValue().toString()));
@@ -462,5 +511,13 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
             {
             }
         });
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mFirebaseProviderWorking.getmDatabaseReference()
+                .removeEventListener(mValueEventListenerAllDriving);
+        super.onDestroy();
     }
 }

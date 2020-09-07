@@ -59,6 +59,7 @@
                 android:layout_height="@dimen/alto_ancho_botones_views_en_carrera">
             </androidx.appcompat.widget.AppCompatButton>
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_chat_driver"
                 android:layout_marginTop="@dimen/margenes_botones_en_carrera"
                 android:layout_marginRight="@dimen/margenesRight_botones_en_carrera"
                 android:background="@drawable/border_carrera_chat_"

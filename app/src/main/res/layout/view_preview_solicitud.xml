@@ -3,11 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
-    app:cardBackgroundColor="@color/colorSecondaryText"
+    app:cardBackgroundColor="@android:color/transparent"
     android:layout_margin="@dimen/margenes_card_alert_confrimar_cancelar_carrera"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <LinearLayout
+        android:background="@android:color/transparent"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -97,11 +98,9 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_confirmar_solicitud"
                 android:textSize="@dimen/text_size_text_cancelar_confirmar"
-                android:layout_margin="@dimen/margenes_botors_cancelar_confirmar"
                 android:textStyle="bold"
                 android:textColor="@color/colorSecondaryText"
                 android:text="@string/text_confirmar_boton"
-                android:background="@drawable/round_boton"
                 android:backgroundTint="@color/colorPrimaryLight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

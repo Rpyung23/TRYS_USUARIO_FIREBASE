@@ -15,5 +15,6 @@
     <string name="text_cancelar_boton">CANCELAR</string>
     <string name="text_confirmar_boton">CONFIRMAR</string>
     <string name="string_taxi_cercano">BUSCANDO TAXI MAS CERCANO</string>
-    <string name="url_create_FCM">http://192.168.1.2/TrysService/Firebase_/create_solicitud.php</string>
+    <string name="url_create_FCM">http://192.168.1.4/TrysService/Firebase_/create_solicitud.php</string>
+    <string name="hint_enter_a_message">Escriba su mensaje</string>
 </resources>

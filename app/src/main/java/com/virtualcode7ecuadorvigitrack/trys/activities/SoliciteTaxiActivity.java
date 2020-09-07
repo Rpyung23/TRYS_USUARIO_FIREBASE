@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.system.Os;
 import android.util.Log;
@@ -72,6 +73,44 @@ public class SoliciteTaxiActivity extends AppCompatActivity
     private DatabaseReference mDatabaseReference;
 
 
+    private TextView mTextViewCount;
+
+    private Handler mHandler;
+
+    private static int cont= 30;
+
+
+    private GeoQueryEventListener geoQueryEventListener;
+
+    Runnable mRunnable = new Runnable() {
+        @Override
+        public void run()
+        {
+            if (mTextViewCount.getText().toString().equals("00"))
+            {
+                /** Time out**/
+                mHandler.removeCallbacks(this);
+
+                if (mValueEventListener!=null){mBookingDriver.getmDatabaseReference()
+                        .removeEventListener(mValueEventListener);}
+                mGeoQuery.removeAllListeners();
+                textView_estado_solicitud.setText("Tiempo De Espera Agotado");
+
+            }else
+                {
+                    cont  = cont-1;
+                    if (cont>9)
+                    {
+                        mTextViewCount.setText(String.valueOf(cont));
+                    }else
+                        {
+                            mTextViewCount.setText("0"+String.valueOf(cont));
+                        }
+                    mHandler.postDelayed(this,1000);
+                }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -90,6 +129,10 @@ public class SoliciteTaxiActivity extends AppCompatActivity
         token_phone_client = getIntent().getStringExtra("token_phone_client");
         time = getIntent().getDoubleExtra("time",0);
         distance = getIntent().getDoubleExtra("distance",0);
+
+
+        textView_estado_solicitud = findViewById(R.id.id_textview_estado_solicitud);
+        mTextViewCount = findViewById(R.id.id_textview_cont_tiempo);
 
         mBookingDriver = new cBookingDriver();
         OSolicitudTaxi = new cSolicitudTaxi();
@@ -113,7 +156,6 @@ public class SoliciteTaxiActivity extends AppCompatActivity
         OSolicitudTaxi.setDistance(distance);
 
 
-        textView_estado_solicitud = findViewById(R.id.id_textview_estado_solicitud);
         mGeoFire = new cGeoFire();
         /*mGeoFire.aroundTaxi(new LatLng(latitud_inicio,longitud_inicio)
                 ,1,textView_estado_solicitud,OSolicitudTaxi
@@ -121,13 +163,15 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
         aroundTaxi(new LatLng(latitud_inicio,longitud_inicio)
                 ,1 );
+        mHandler = new Handler();
+        mHandler.postDelayed(mRunnable,1000);
 
     }
 
     private void aroundTaxi(final LatLng latLng,final float radio)
     {
-        GeoQuery geoQuery = mGeoFire.aroundTaxi2(latLng,radio);
-        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+        mGeoQuery = mGeoFire.aroundTaxi2(latLng,radio);
+        mGeoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location)
             {
@@ -153,13 +197,13 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             @Override
             public void onGeoQueryReady()
             {
-                if (radio>=5 && !isdriver)
+                if (radio>=5)
                 {
                     mGeoQuery.removeAllListeners();
                     return;
                 }else if(radio<5 && !isdriver)
                     {
-                        float radio_ = radio+0.1f;
+                        float radio_ = radio+1;
                         aroundTaxi(latLng,radio_);
                     }
             }
@@ -169,7 +213,6 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
             }
         });
-
     }
 
     private void readTokenDriver(final String id_driver)
@@ -264,10 +307,12 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                         Intent intent = new Intent(SoliciteTaxiActivity.this
                                 ,BookingActivity.class);
                         intent.putExtra("id_driver",key);
+                        intent.putExtra("price",solicitudTaxi.getPrice());
                         intent.putExtra("latitud_start",solicitudTaxi.getLatitud_start());
                         intent.putExtra("longitud_start",solicitudTaxi.getLongitud_start());
                         intent.putExtra("latitud_end",solicitudTaxi.getLatitud_end());
                         intent.putExtra("longitud_end",solicitudTaxi.getLongitud_end());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     }else if(snapshot.child("status").getValue().toString().equals("cancel"))
@@ -275,9 +320,10 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                         Toast.makeText(SoliciteTaxiActivity.this, "NO DRIVER"
                                 ,Toast.LENGTH_SHORT).show();
                         /** Driver NO Acepto **/
-                        Intent intent = new Intent(SoliciteTaxiActivity.this
+                        Intent intent_ = new Intent(SoliciteTaxiActivity.this
                                 ,InicioActivity.class);
-                        startActivity(intent);
+                        intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent_);
                         finish();
                     }
                 }else
@@ -294,6 +340,14 @@ public class SoliciteTaxiActivity extends AppCompatActivity
         });
     }
 
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        super.onBackPressed();
+    }
+
     @Override
     protected void onPostResume()
     {
@@ -303,7 +357,19 @@ public class SoliciteTaxiActivity extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-        mBookingDriver.getmDatabaseReference().removeEventListener(mValueEventListener);
+        if (mHandler!=null)
+        {
+            mHandler.removeCallbacks(mRunnable);
+        }
+
+        if (mValueEventListener!=null){mBookingDriver.getmDatabaseReference()
+                .removeEventListener(mValueEventListener);}
+        mGeoQuery.removeAllListeners();
+
+
+        Intent intent = new Intent(SoliciteTaxiActivity.this,InicioActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
         super.onDestroy();
     }
 }

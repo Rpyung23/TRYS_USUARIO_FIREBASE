@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:background="#E6E6E6"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="5dp"
+    android:weightSum="1"
+    android:gravity="center|end"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/id_circle_profile_chats"
+        android:layout_weight="0.1"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:civ_border_color="@color/colorPrimaryDark"
+        app:civ_border_width="2dp"
+        android:src="@drawable/logomenufinal"
+        >
+    </de.hdodenhof.circleimageview.CircleImageView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_weight="0.9"
+        android:layout_marginRight="8dp"
+        android:layout_height="220dp">
+        <ImageView
+            android:scaleType="centerCrop"
+            android:id="@+id/image_id_msm_chat_"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ImageView>
+    </androidx.cardview.widget.CardView>
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

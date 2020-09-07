@@ -1,6 +1,7 @@
 package com.virtualcode7ecuadorvigitrack.trys.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +31,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -38,6 +43,7 @@ import com.google.android.libraries.places.api.model.TypeFilter;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -48,6 +54,7 @@ import com.virtualcode7ecuadorvigitrack.trys.models.cUser;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cBookingDriver;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cDriverProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderBusy;
 import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTazosBooking;
 import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTrazos;
 
@@ -69,6 +76,8 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     private double longitud_end;
     private double price;
 
+    private Marker mMarkerDriver;
+
     private cUser mUser;
 
     private final static int REQUEST_CALL_PHONE =8;
@@ -85,6 +94,13 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     private cBookingDriver mBookingDriver;
 
     private Thread mThread;
+
+
+    private cFirebaseProviderBusy mFirebaseProviderBusy;
+
+    private ValueEventListener mValueEventListener;
+
+    private ChildEventListener mChildEventListenerBooking;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -109,7 +125,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
 
         mDriverProvider = new cDriverProvider();
         mBookingDriver = new cBookingDriver();
-
+        mFirebaseProviderBusy = new cFirebaseProviderBusy();
 
 
         mUser = new cUser();
@@ -119,7 +135,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
         mButtonCancel = findViewById(R.id.btn_cancelar_carrera);
         mButtonProfile = findViewById(R.id.btn_driver_detalle);
         mButtonCall = findViewById(R.id.btn_llamada_driver);
-        //mButtonChat = findViewById(R.id.);
+        mButtonChat = findViewById(R.id.btn_chat_driver);
 
         mSupportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapview);
@@ -185,6 +201,39 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                     {
                         callDriver();
                     }
+            }
+        });
+
+        mButtonChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+
+                mDriverProvider.readDriver(id_driver)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot)
+                            {
+                                if (snapshot.exists())
+                                {
+
+                                    Intent intent = new Intent(BookingActivity.this,MessagingActivity.class);
+                                    intent.putExtra("id_driver",id_driver);
+                                    intent.putExtra("photo_driver",snapshot.child("Photo")
+                                            .getValue().toString());
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }else
+                                {
+                                    Toast.makeText(BookingActivity.this, "Client sin perfil", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error)
+                            {
+                            }
+                        });
+
             }
         });
     }
@@ -268,6 +317,38 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
         oR.setLongitud_final(longitud_end);
         mThread = new Thread(oR);
         mThread.run();
+
+        rastreoBusyDriver();
+
+    }
+
+    private void rastreoBusyDriver()
+    {
+        mValueEventListener = mFirebaseProviderBusy.readBusyDriving(id_driver)
+                .addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                if (snapshot.exists())
+                {
+                    if (mMarkerDriver!=null){mMarkerDriver.remove();}
+
+                    double lat = Double.parseDouble(snapshot.child("l").child("0")
+                            .getValue().toString());
+                    double lng = Double.parseDouble(snapshot.child("l").child("1")
+                            .getValue().toString());
+                    mMarkerDriver = mGoogleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(lat,lng))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo)));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void showProfileDialog()
@@ -318,6 +399,77 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onPostResume() {
         mSupportMapFragment.getMapAsync(this);
+        mChildEventListenerBooking = mBookingDriver.getmDatabaseReference()
+                .addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+            {
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+            {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot)
+            {
+                Log.e("KEYCHANGE",snapshot.getKey().toString());
+                if (snapshot.getKey().equals(id_driver) )
+                {
+                    if (snapshot.child("status").getValue().toString().equals("cancel"))
+                    {
+                        /**CARRERA CANCELADA**/
+                        Log.e("KEYCHANGE","CANCELADA");
+
+                        Toast.makeText(BookingActivity.this, "SU CARRERA HA SIDO CANCELADA "
+                                , Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra("id_driver",id_driver);
+                        startActivity(intent);
+                        finish();
+
+                    }else if (snapshot.child("status").getValue().toString().equals("finalize"))
+                        {
+                            /** CARRERA FINALIZADA**/
+
+                            Log.e("KEYCHANGE","FINALIZADA");
+
+                            Toast.makeText(BookingActivity.this, "CARRERA FINALIZADA EXITOSAMENTE"
+                                    , Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.putExtra("id_driver",id_driver);
+                            startActivity(intent);
+                            finish();
+
+                        }
+                }
+                //Log.e("KEYCHANGE",snapshot.child("status").getValue().toString());
+                //finish();
+            }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+            {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error)
+            {
+
+            }
+        });
         super.onPostResume();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mFirebaseProviderBusy.getmDatabaseReference().removeEventListener(mValueEventListener);
+        mBookingDriver.getmDatabaseReference().removeEventListener(mChildEventListenerBooking);
+        super.onDestroy();
     }
 }
