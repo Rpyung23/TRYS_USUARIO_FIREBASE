@@ -91,6 +91,7 @@
             app:startIconDrawable="@drawable/phone">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:maxLength="10"
                 android:id="@+id/id_textinput_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

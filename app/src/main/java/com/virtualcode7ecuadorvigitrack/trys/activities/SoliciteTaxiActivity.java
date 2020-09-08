@@ -362,10 +362,13 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             mHandler.removeCallbacks(mRunnable);
         }
 
+
+
         if (mValueEventListener!=null){mBookingDriver.getmDatabaseReference()
                 .removeEventListener(mValueEventListener);}
         mGeoQuery.removeAllListeners();
 
+        cont = 30;
 
         Intent intent = new Intent(SoliciteTaxiActivity.this,InicioActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -24,6 +24,8 @@ import com.virtualcode7ecuadorvigitrack.trys.R;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderToken;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class LoginActivity extends AppCompatActivity
 {
     private Button mButtonRegister;
@@ -41,6 +43,8 @@ public class LoginActivity extends AppCompatActivity
     private AlertDialog alertDialog_permission;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +56,8 @@ public class LoginActivity extends AppCompatActivity
         mButtonLogin = findViewById(R.id.id_login_client);
         mTextInputEditTextEmail = findViewById(R.id.id_textinput_mail);
         mTextInputEditTextPass = findViewById(R.id.id_textinput_password);
+
+
 
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
         {

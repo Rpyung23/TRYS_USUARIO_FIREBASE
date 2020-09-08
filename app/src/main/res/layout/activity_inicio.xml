@@ -46,13 +46,17 @@
         </androidx.appcompat.widget.AppCompatButton>
 
     </FrameLayout>
-    <com.google.android.material.navigation.NavigationView
+    <com.rom4ek.arcnavigationview.ArcNavigationView
         android:id="@+id/nav_view"
         app:headerLayout="@layout/header_menu"
         app:menu="@menu/menu_drawer_clients"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
-    </com.google.android.material.navigation.NavigationView>
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        app:arc_cropDirection="cropInside"
+        app:arc_width="90dp"
+        >
+    </com.rom4ek.arcnavigationview.ArcNavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>

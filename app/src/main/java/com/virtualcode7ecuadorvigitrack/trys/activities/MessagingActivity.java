@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MessagingActivity extends AppCompatActivity
+public class MessagingActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener
 {
     String id_driver;
     private FirebaseDatabase mFirebaseDatabase;
@@ -96,9 +97,18 @@ public class MessagingActivity extends AppCompatActivity
         mDatabaseReference = mFirebaseDatabase.getReference("Messaging");
 
         id_driver = getIntent().getStringExtra("id_driver");
-
+        mMessagingArrayList = new ArrayList<>();
 
         banderaSound =true;
+
+
+        mAdapterChats = new adapterChats(mMessagingArrayList,MessagingActivity.this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MessagingActivity.this);
+        mRecyclerViewChats.setLayoutManager(linearLayoutManager);
+        mRecyclerViewChats.setAdapter(mAdapterChats);
+        //mRecyclerViewChats.smoothScrollToPosition(mMessagingArrayList.size());
+
+
 
         mButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +159,6 @@ public class MessagingActivity extends AppCompatActivity
 
     private void sendMessaging(final String msm,String type_msm)
     {
-        banderaSound = false;
         mDatabaseReference.child(id_driver).push().setValue(creteHashMapMessaging(msm,type_msm)
                 , new DatabaseReference.CompletionListener() {
             @Override
@@ -187,70 +196,69 @@ public class MessagingActivity extends AppCompatActivity
 
     private void readMessaging()
     {
-        mDatabaseReference.child(id_driver).addValueEventListener(new ValueEventListener() {
+
+        mDatabaseReference.child(id_driver).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot)
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
             {
                 if (snapshot.exists())
                 {
-                    mMessagingArrayList = new ArrayList<>();
-                    for (DataSnapshot dataSnapshotMess : snapshot.getChildren())
+                    DataSnapshot dataSnapshotMess = snapshot;
+                    cMessaging oM = new cMessaging();
+                    oM.setId_reciver_send(dataSnapshotMess.child("id_reciver_send")
+                            .getValue().toString());
+
+                    if (oM.getId_reciver_send().equals(mFirebaseProviderAuth.getmFirebaseAuth()
+                            .getUid()))
                     {
-                        cMessaging oM = new cMessaging();
-                        oM.setId_reciver_send(dataSnapshotMess.child("id_reciver_send")
-                                .getValue().toString());
-
-                        if (oM.getId_reciver_send().equals(mFirebaseProviderAuth.getmFirebaseAuth()
-                                .getUid()))
-                        {
-                            oM.setUrl_perfil_driver(url_photo);
-                        }else
-                        {
-                            oM.setUrl_perfil_client(Url_photo_IntentClient);
-                        }
-                        oM.setMessaging(dataSnapshotMess.child("messaging")
-                                .getValue().toString());
-
-                        if (dataSnapshotMess.child("type_msm").exists())
-                        {
-                            oM.setType_msm(dataSnapshotMess.child("type_msm").getValue().toString());
-                        }else
-                        {
-                            oM.setType_msm("text");
-                        }
-
-                        mMessagingArrayList.add(oM);
+                        oM.setUrl_perfil_driver(url_photo);
+                    }else
+                    {
+                        oM.setUrl_perfil_client(Url_photo_IntentClient);
                     }
-                    llenarRecyclerView();
+                    oM.setMessaging(dataSnapshotMess.child("messaging")
+                            .getValue().toString());
+
+                    if (dataSnapshotMess.child("type_msm").exists())
+                    {
+                        oM.setType_msm(dataSnapshotMess.child("type_msm").getValue().toString());
+                    }else
+                    {
+                        oM.setType_msm("text");
+                    }
+                    mMessagingArrayList.add(oM);
+                    mAdapterChats.notifyDataSetChanged();
+                    if (!oM.getId_reciver_send().equals(mFirebaseProviderAuth.getmFirebaseAuth()
+                            .getCurrentUser().getUid()))
+                    {
+                        if (mMediaPlayer.isPlaying())
+                        {
+                            mMediaPlayer.pause();
+                        }
+                        mMediaPlayer.start();
+                    }
+                    mRecyclerViewChats.smoothScrollToPosition(mAdapterChats.getItemCount()-1);
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError error)
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
             {
+
+            }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
-
-    private void llenarRecyclerView()
-    {
-        if (!mMediaPlayer.isPlaying() && banderaSound)
-        {
-            mMediaPlayer.start();
-        }else if (!banderaSound)
-        {
-            banderaSound = true;
-        }
-        mAdapterChats = new adapterChats(mMessagingArrayList,MessagingActivity.this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MessagingActivity.this);
-        mRecyclerViewChats.setLayoutManager(linearLayoutManager);
-        mRecyclerViewChats.setAdapter(mAdapterChats);
-        mAdapterChats.notifyDataSetChanged();
-        mRecyclerViewChats.smoothScrollToPosition(mMessagingArrayList.size());
-        //mRecyclerViewChats.smoothScrollToPosition(mMessagingArrayList.size());
-        //mAdapterChats.notify();
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
@@ -280,6 +288,7 @@ public class MessagingActivity extends AppCompatActivity
 
 
 
+
     @Override
     public void onBackPressed()
     {
@@ -296,5 +305,11 @@ public class MessagingActivity extends AppCompatActivity
             mMediaPlayer.stop();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer)
+    {
+        mMediaPlayer.start();
     }
 }

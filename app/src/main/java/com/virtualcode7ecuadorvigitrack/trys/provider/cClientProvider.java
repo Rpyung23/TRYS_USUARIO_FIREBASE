@@ -14,7 +14,7 @@ public class cClientProvider
     public cClientProvider()
     {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference();
+        mDatabaseReference = mFirebaseDatabase.getReference("Clients");
     }
 
     public Task<Void> createNewClient(cUser Ou)
@@ -24,10 +24,15 @@ public class cClientProvider
         hashMap.put("Photo",Ou.getPhoto_url());
         hashMap.put("Email",Ou.getEmail());
         hashMap.put("Phone",Ou.getPhone());
-        return mDatabaseReference.child("Clients").child(Ou.getId_token_()).setValue(hashMap);
+        return mDatabaseReference.child(Ou.getId_token_()).setValue(hashMap);
     }
 
     public DatabaseReference getmDatabaseReference() {
         return mDatabaseReference;
+    }
+
+    public DatabaseReference readProfileClient(String id_client)
+    {
+        return mDatabaseReference.child(id_client);
     }
 }

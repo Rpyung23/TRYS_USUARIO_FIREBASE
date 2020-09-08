@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
+    android:background="@android:color/white"
     tools:context=".activities.MessagingActivity">
 
     <include layout="@layout/appbar_toolbar">

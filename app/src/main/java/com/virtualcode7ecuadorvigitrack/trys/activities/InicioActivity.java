@@ -55,8 +55,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 import com.virtualcode7ecuadorvigitrack.trys.R;
 import com.virtualcode7ecuadorvigitrack.trys.includes.cToolbar;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cClientProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderWorking;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cGeoFire;
@@ -85,6 +87,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private EditText mEditTextMiPosition;
 
+    private cClientProvider mClientProvider;
 
     private EditText mEditTextMyDestino;
 
@@ -158,9 +161,10 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     };
 
 
+    private View viewHeaderMenu;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
 
@@ -176,7 +180,12 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         mEditTextMiPosition = findViewById(R.id.id_edittext_mi_position);
         mEditTextMyDestino = findViewById(R.id.id_edittext_mi_destino);
         mButtonGotoTaxi = findViewById(R.id.id_btn_gotoTaxi);
+        viewHeaderMenu = navigationView.getHeaderView(0);
+
+
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
+
+        mClientProvider = new cClientProvider();
 
         mFirebaseProviderWorking = new cFirebaseProviderWorking();
 
@@ -292,6 +301,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                                     .getValue().toString()));
                             startActivity(intent);
                             alertDialog_showPreviewSolicitud.cancel();
+                            finish();
                         }
                     }
                     @Override
@@ -426,8 +436,39 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     @Override
     protected void onPostResume()
     {
+        llenarPhotoNamePhone();
+
         verificarBooking();
         super.onPostResume();
+    }
+
+    private void llenarPhotoNamePhone()
+    {
+        final CircleImageView circleImageView = viewHeaderMenu.findViewById(R.id.id_circle_profile_header_menu_view);
+        final TextView textViewName = viewHeaderMenu.findViewById(R.id.id_textview_name_profile_header_menu_view);
+        final TextView textViewPhone = viewHeaderMenu.findViewById(R.id.id_textview_phone_profile_header_menu_view);
+        mClientProvider.readProfileClient(mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                if (snapshot.exists())
+                {
+                    Picasso.with(InicioActivity.this)
+                            .load(snapshot.child("Photo").getValue().toString())
+                            .placeholder(R.drawable.loading_photo)
+                            .error(R.drawable.error_image_load)
+                            .into(circleImageView);
+                    textViewName.setText(snapshot.child("Name").getValue().toString());
+                    textViewPhone.setText(snapshot.child("Phone").getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void readingGpsAllWorking()
