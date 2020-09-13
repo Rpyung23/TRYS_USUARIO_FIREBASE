@@ -88,7 +88,7 @@ public class cNotificationDriverLocationAround
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
         {
             getmNotificationManager().createNotificationChannel(crearChannel());
-            builder.setSmallIcon(android.R.drawable.sym_action_chat);
+            builder.setSmallIcon(R.drawable.logo_notificaciones_app);
             builder.setContentTitle(title);
             builder.setContentText(body);
             builder.setVisibility(Notification.VISIBILITY_PUBLIC);
@@ -104,7 +104,7 @@ public class cNotificationDriverLocationAround
     public Notification.Builder createNotificationWithOutChannel(String title,String body)
     {
         Notification.Builder builder = new Notification.Builder(getContext());
-        builder.setSmallIcon(android.R.drawable.sym_action_chat);
+        builder.setSmallIcon(R.drawable.logo_notificaciones_app);
         builder.setContentTitle(title);
         builder.setContentText(body);
         builder.setVisibility(Notification.VISIBILITY_PUBLIC);

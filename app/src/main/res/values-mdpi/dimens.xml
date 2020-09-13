@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="alto_acnho_circle_view_login">130dp</dimen>
+    <dimen name="marginTop_circle_view_login">70dp</dimen>
+    <dimen name="alto_shape_login">150dp</dimen>
+    <dimen name="textsize_22sp_login_registro">15sp</dimen>
+    <dimen name="textsize_25sp_registro">25sp</dimen>
+    <dimen name="alto_acnho_circle_view_register">210dp</dimen>
+    <dimen name="textsize_btn_solicitar_taxi">25sp</dimen>
+    <dimen name="text_size_text_cancelar_confirmar">25sp</dimen>
+    <dimen name="margenes_botors_cancelar_confirmar">25dp</dimen>
+    <dimen name="margenes_card_alert_confrimar_cancelar_carrera">7dp</dimen>
+    <dimen name="text_size_inicio_destino_alter_detalle">20sp</dimen>
+    <dimen name="text_size_taxi_cercano">45sp</dimen>
+
+</resources>

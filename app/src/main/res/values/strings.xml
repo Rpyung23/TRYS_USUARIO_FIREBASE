@@ -9,7 +9,7 @@
     <string name="hint_password">Ingrese su password</string>
     <string name="hint_phone">Ingrese su telefono</string>
     <string name="toolbar_regitro_client">NUEVO CLIENTE</string>
-    <string name="api_key_google_maps">AIzaSyDs5T_D-OuX1IHCOoPMsNdtcKuVtc_J1dE</string>
+    <string name="api_key_google_maps">AIzaSyBqzy7lfHM1Bmb2ldsrvEbyBK7idFVr0t8</string>
     <string name="vacio" />
     <string name="text_boton_solicitar">SOLICITAR</string>
     <string name="text_cancelar_boton">CANCELAR</string>

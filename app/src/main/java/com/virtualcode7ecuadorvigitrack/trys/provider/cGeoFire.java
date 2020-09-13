@@ -38,9 +38,11 @@ public class cGeoFire
 
     public GeoQuery aroundTaxi2(LatLng latLng,float radio)
     {
-        return mGeoFire.queryAtLocation(new GeoLocation(latLng.latitude
+        GeoQuery mQuery =  mGeoFire.queryAtLocation(new GeoLocation(latLng.latitude
                 ,latLng.longitude)
                 ,radio);
+        mQuery.removeAllListeners();
+        return mQuery;
     }
 
 

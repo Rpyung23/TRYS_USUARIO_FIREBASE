@@ -13,4 +13,5 @@
     <color name="colorBotonCancelarOcupadoTerminarEmergence">#E32323</color>
     <color name="colorBorderBotonCancelarOcupadoTerminarEmergence">#B60808</color>
     <color name="colorPrimaryDarkRight">#CC09587E</color>
+    <color name="colorLoadingCardHistoryBooking">#BDBDBD</color>
 </resources>

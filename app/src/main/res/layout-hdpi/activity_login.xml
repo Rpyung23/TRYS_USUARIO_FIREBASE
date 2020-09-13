@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:fitsSystemWindows="true"
+tools:context=".activities.LoginActivity">
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.github.florent37.shapeofview.shapes.ArcView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/alto_shape_login"
+        app:shape_arc_cropDirection="outside"
+        app:shape_arc_height="20dp"
+        app:shape_arc_position="bottom"
+        >
+        <View
+            android:background="@color/colorPrimaryLight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </View>
+    </com.github.florent37.shapeofview.shapes.ArcView>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            app:startIconDrawable="@drawable/email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:hint="@string/hint_ingrese_mail"
+                android:id="@+id/id_textinput_mail"
+                android:inputType="textEmailAddress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            app:passwordToggleEnabled="true"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            app:startIconDrawable="@drawable/icono_password_login_p"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:hint="@string/hint_password"
+                android:id="@+id/id_textinput_password"
+                android:inputType="textPassword"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:gravity="end"
+            android:textStyle="bold|italic"
+            android:text="@string/text_olvide_password"
+            android:textColor="@color/colorPrimaryText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/id_registro_client"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="@dimen/textsize_22sp_login_registro"
+                android:textStyle="bold|normal"
+                android:text="@string/text_boton_registro"
+                android:layout_margin="5dp"
+                android:background="@drawable/round_boton"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:layout_height="?actionBarSize">
+            </androidx.appcompat.widget.AppCompatButton>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/id_login_client"
+                android:textColor="@color/colorSecondaryText"
+                android:textSize="@dimen/textsize_22sp_login_registro"
+                android:textStyle="bold|normal"
+                android:text="@string/text_boton_login"
+                android:backgroundTint="@color/colorPrimaryLight"
+                android:layout_margin="5dp"
+                android:background="@drawable/round_boton"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="?actionBarSize">
+            </androidx.appcompat.widget.AppCompatButton>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
+
+
+<de.hdodenhof.circleimageview.CircleImageView
+    android:id="@+id/circle_view_login"
+    android:layout_width="@dimen/alto_acnho_circle_view_login"
+    android:layout_height="@dimen/alto_acnho_circle_view_login"
+    app:civ_border_width="7dp"
+    app:civ_border_color="@color/colorPrimaryDark"
+    android:src="@drawable/logomenufinal"
+    android:layout_marginTop="@dimen/marginTop_circle_view_login"
+    android:layout_gravity="center|top"
+    />
+
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:layout_marginBottom="5dp"
+    android:layout_gravity="bottom"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/id_circle_view_facebook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/facebook"
+        android:layout_marginRight="5dp"
+        >
+    </de.hdodenhof.circleimageview.CircleImageView>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/id_circle_view_gmail"
+        android:src="@drawable/google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </de.hdodenhof.circleimageview.CircleImageView>
+</androidx.appcompat.widget.LinearLayoutCompat>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

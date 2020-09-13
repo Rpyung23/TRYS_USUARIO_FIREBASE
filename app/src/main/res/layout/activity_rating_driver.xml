@@ -53,10 +53,11 @@
             </TextView>
 
             <RatingBar
+                android:numStars="5"
                 android:id="@+id/id_ratingBarDriver"
                 android:layout_margin="?actionBarSize"
-                android:numStars="5"
                 android:layout_width="match_parent"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content">
             </RatingBar>
 

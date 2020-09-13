@@ -64,7 +64,6 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
     private cVolleyNotification OvolleyNotification;
 
-    private GeoQuery mGeoQuery;
 
     private boolean isdriver=false;
 
@@ -79,6 +78,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
     private static int cont= 30;
 
+    private float mRadio = 1;
 
     private GeoQueryEventListener geoQueryEventListener;
 
@@ -93,7 +93,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
                 if (mValueEventListener!=null){mBookingDriver.getmDatabaseReference()
                         .removeEventListener(mValueEventListener);}
-                mGeoQuery.removeAllListeners();
+                //mGeoQuery.removeAllListeners();
                 textView_estado_solicitud.setText("Tiempo De Espera Agotado");
 
             }else
@@ -161,24 +161,22 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                 ,1,textView_estado_solicitud,OSolicitudTaxi
                 ,OvolleyNotification);*/
 
-        aroundTaxi(new LatLng(latitud_inicio,longitud_inicio)
-                ,1 );
+        aroundTaxi(new LatLng(latitud_inicio,longitud_inicio));
         mHandler = new Handler();
         mHandler.postDelayed(mRunnable,1000);
 
     }
 
-    private void aroundTaxi(final LatLng latLng,final float radio)
+    private void aroundTaxi(final LatLng latLng)
     {
-        mGeoQuery = mGeoFire.aroundTaxi2(latLng,radio);
-        mGeoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+        mGeoFire.aroundTaxi2(latLng,mRadio).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location)
             {
-                isdriver=true;
-
-                if (isdriver)
+                if (!isdriver)
                 {
+                    isdriver=true;
+                    Log.e("NOTI","ENVIANDO");
                     readTokenDriver(key);
                 }
             }
@@ -197,20 +195,27 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             @Override
             public void onGeoQueryReady()
             {
-                if (radio>=5)
+
+                if (!isdriver)
                 {
-                    mGeoQuery.removeAllListeners();
-                    return;
-                }else if(radio<5 && !isdriver)
+                    mRadio = mRadio+0.1f;
+                    Log.e("NOTI","RADIO : "+mRadio);
+                    if (mRadio>5)
                     {
-                        float radio_ = radio+1;
-                        aroundTaxi(latLng,radio_);
-                    }
+                        Log.e("NOTI","NO ENCONTRO");
+                        isdriver=true;
+                        return;
+                    }else
+                        {
+                            aroundTaxi(latLng);
+                        }
+                }
             }
 
             @Override
-            public void onGeoQueryError(DatabaseError error) {
-
+            public void onGeoQueryError(DatabaseError error)
+            {
+                Log.e("NOTI",error.getMessage());
             }
         });
     }
@@ -228,7 +233,9 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
                     OSolicitudTaxi.setToken_driver_phone(String.valueOf(snapshot.child("token")
                             .getValue().toString()));
-                    OvolleyNotification.createNotificationServer(OSolicitudTaxi);
+                    //OvolleyNotification.createNotificationServer(OSolicitudTaxi);
+
+                    OvolleyNotification.createNotificationServerFirebase(OSolicitudTaxi);
 
                     textView_estado_solicitud.setText("ESPERANDO RESPUESTA DEL TAXI");
 
@@ -236,7 +243,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
                 }else
                     {
-
+                        return;
                     }
             }
 
@@ -362,17 +369,14 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             mHandler.removeCallbacks(mRunnable);
         }
 
-
-
         if (mValueEventListener!=null){mBookingDriver.getmDatabaseReference()
                 .removeEventListener(mValueEventListener);}
-        mGeoQuery.removeAllListeners();
-
+        //mGeoQuery.removeGeoQueryEventListener();
         cont = 30;
 
-        Intent intent = new Intent(SoliciteTaxiActivity.this,InicioActivity.class);
+        /*Intent intent = new Intent(SoliciteTaxiActivity.this,InicioActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(intent);*/
         super.onDestroy();
     }
 }

@@ -6,26 +6,26 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-public class cFirebaseProviderClientRanting
+public class cFirebaseProviderClientRating
 {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
 
-    public cFirebaseProviderClientRanting()
+    public cFirebaseProviderClientRating()
     {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference("RatingClient");
     }
 
-    public Task<Void> createClientRating(String id_client)
+    public Task<Void> createClientRating(String id_client,double rating)
     {
-        return mDatabaseReference.child(id_client).setValue(createHashMap());
+        return mDatabaseReference.child(id_client).setValue(createHashMap(rating));
     }
 
-    private Object createHashMap()
+    private Object createHashMap(double rating)
     {
         HashMap<Object,Object> hashMap = new HashMap<>();
-        hashMap.put("rating",5);
+        hashMap.put("rating",rating);
         return hashMap;
     }
 }

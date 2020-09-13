@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -29,6 +30,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -46,6 +48,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.PlacesStatusCodes;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -62,6 +65,7 @@ import com.virtualcode7ecuadorvigitrack.trys.provider.cClientProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderWorking;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cGeoFire;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderCalendar;
 import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTrazos;
 
 import java.io.IOException;
@@ -89,7 +93,9 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private cClientProvider mClientProvider;
 
-    private EditText mEditTextMyDestino;
+    private TextView mEditTextMyDestino;
+
+    private cProviderCalendar mProviderCalendar;
 
     private NavigationView navigationView;
 
@@ -169,6 +175,9 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_inicio);
 
 
+
+        mProviderCalendar = new cProviderCalendar();
+
         toolbar = findViewById(R.id.id_toolbar_mapview);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
@@ -202,6 +211,10 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
             {
                 switch (item.getItemId())
                 {
+                    case R.id.id_history:
+                        Intent intent = new Intent(InicioActivity.this,HistoryBookingActivity.class);
+                        startActivity(intent);
+                        break;
                     case R.id.id_singOut:
                         if (mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser()!=null)
                         {
@@ -225,6 +238,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                 Intent intent = new Autocomplete.IntentBuilder
                         (AutocompleteActivityMode.OVERLAY, fields)
                         .setTypeFilter(TypeFilter.ADDRESS)
+                        //.setTypeFilter(TypeFilter.ESTABLISHMENT)
+                        //.setTypeFilter(TypeFilter.CITIES)
                         //.setCountry("EC")
                         .build(InicioActivity.this);
                 startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
@@ -245,6 +260,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
             }
         });
     }
+
+
 
     private void showAlertDialogPreviewSolicitud()
     {
@@ -287,7 +304,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             DecimalFormat priceFormat = new DecimalFormat("#.##", separadoresPersonalizados);
                             Intent intent = new Intent(InicioActivity.this,
                                     SoliciteTaxiActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.putExtra("lat_start",markerIam.getPosition().latitude);
                             intent.putExtra("long_start",markerIam.getPosition().longitude);
                             intent.putExtra("lat_end",markerIamDestino.getPosition().latitude);
@@ -296,7 +313,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             intent.putExtra("price",Double.parseDouble(priceFormat.format(mRunnableTrazos.getPrecio_pago_carrera())));
                             intent.putExtra("distance",mRunnableTrazos.getKm_reco());
                             intent.putExtra("time",mRunnableTrazos.getMinu_reco());
-                            intent.putExtra("fecha","2020-02-02");
+                            intent.putExtra("fecha",mProviderCalendar.getFecha());
                             intent.putExtra("token_phone_client",String.valueOf(snapshot.child("token")
                                     .getValue().toString()));
                             startActivity(intent);
@@ -392,9 +409,12 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                 {
                     Toast.makeText(this, "ERROR AUTOCOMPLETE", Toast.LENGTH_SHORT)
                             .show();
+                    Status status = Autocomplete.getStatusFromIntent(data);
+                    Log.e("Error",status.getStatusMessage());
                 }
         }
     }
+
 
     private boolean is_day_night()
     {
@@ -437,7 +457,6 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onPostResume()
     {
         llenarPhotoNamePhone();
-
         verificarBooking();
         super.onPostResume();
     }

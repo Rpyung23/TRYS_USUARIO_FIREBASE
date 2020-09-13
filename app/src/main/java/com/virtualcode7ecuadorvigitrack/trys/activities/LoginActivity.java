@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderToken;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dmax.dialog.SpotsDialog;
 
 public class LoginActivity extends AppCompatActivity
 {
@@ -42,6 +45,7 @@ public class LoginActivity extends AppCompatActivity
 
     private AlertDialog alertDialog_permission;
 
+    private android.app.AlertDialog mAlertDialogLogin;
 
 
 
@@ -49,6 +53,8 @@ public class LoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
 
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
 
@@ -159,15 +165,17 @@ public class LoginActivity extends AppCompatActivity
     private void abrirActivityInicio()
     {
         updatetokenPhone();
+        showProgressLogin();
         Intent intent = new Intent(LoginActivity.this, InicioActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
     }
 
     private void openActivityRegisterClient()
     {
         Intent intent = new Intent(LoginActivity.this, RegisterClientActivity.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -204,5 +212,47 @@ public class LoginActivity extends AppCompatActivity
                     showrequestPermissions();
                 }
         }
+
+
+    }
+
+    @Override
+    protected void onPostResume()
+    {
+        Log.e("M",Build.MODEL.toString());
+        Log.e("M",Build.RADIO.toString());
+        Log.e("M",Build.DISPLAY);
+        Log.e("M",Build.getRadioVersion());
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Log.e("SC",String.valueOf(metrics.scaledDensity));
+        Log.e("DP",String.valueOf(metrics.densityDpi));
+        Log.e("D",""+metrics.density);
+        Log.e("HP",""+metrics.heightPixels);
+        Log.e("WP",""+metrics.widthPixels);
+        Log.e("RV",Build.getRadioVersion());
+
+        super.onPostResume();
+    }
+
+    public void showProgressLogin()
+    {
+        SpotsDialog.Builder builder = new SpotsDialog.Builder();
+        builder.setContext(LoginActivity.this);
+        builder.setMessage("Ingresando...");
+        builder.setCancelable(false);
+        mAlertDialogLogin = builder.build();
+        mAlertDialogLogin.show();
+    }
+    public void  hideProgreesLogin()
+    {
+        mAlertDialogLogin.cancel();
+        mAlertDialogLogin.dismiss();
+    }
+    @Override
+    protected void onDestroy()
+    {
+        if (mAlertDialogLogin!=null){hideProgreesLogin();}
+        super.onDestroy();
     }
 }

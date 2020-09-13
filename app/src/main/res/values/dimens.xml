@@ -25,5 +25,7 @@
     <dimen name="stroke_botones_redondos_en_carrera_celestes">5dp</dimen>
     <dimen name="margen_left_right_top_bottom_datos_usuario">15dp</dimen>
     <dimen name="alto_acnho_circle_profile_chats">70dp</dimen>
+    <dimen name="textsize_price_card_history_booking">47dp</dimen>
+    <dimen name="alto_acnho_card_history_booking">180dp</dimen>
 
 </resources>

@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/colorPrimaryDark"
     android:layout_width="match_parent"
-    app:cardCornerRadius="10dp"
     android:layout_height="wrap_content">
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_margin="7dp"
@@ -22,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize">
         </EditText>
-        <EditText
+        <TextView
             android:id="@+id/id_edittext_mi_destino"
             android:gravity="center"
             android:drawableTint="@color/colorPrimaryDark"
@@ -32,6 +31,6 @@
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize">
-        </EditText>
+        </TextView>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.cardview.widget.CardView>

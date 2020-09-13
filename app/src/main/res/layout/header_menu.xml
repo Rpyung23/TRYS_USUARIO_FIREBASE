@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/id_circle_profile_header_menu_view"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="?actionBarSize"
         android:layout_marginBottom="10dp"
         android:src="@drawable/logomenufinal"
         android:layout_width="150dp"

@@ -2,6 +2,8 @@ package com.virtualcode7ecuadorvigitrack.trys.notification;
 
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.PowerManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -13,6 +15,7 @@ public class cNotificationFirebaseDriverLocationAround extends FirebaseMessaging
 {
     private cNotificationDriverLocationAround mNotificationDriverLocationAround;
     private MediaPlayer mMediaPlayer;
+    private cNotificationMessaging mNotificationMessaging;
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage)
     {
@@ -46,6 +49,34 @@ public class cNotificationFirebaseDriverLocationAround extends FirebaseMessaging
                                     ,remoteMessage.getNotification().getBody())
                                     .build());
                 }
+        }else if (Integer.parseInt(remoteMessage.getData().get("tipo").toString()) == 109)
+        {
+            PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
+            if (!powerManager.isInteractive())
+            {
+                /**NO ESTA ACTIVO**/
+                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+                {
+                    mNotificationMessaging = new cNotificationMessaging(getApplicationContext());
+                    mNotificationMessaging.getNotificationManager().notify(109,mNotificationMessaging
+                            .createNotificationWithChannelSolicitudMESSAGING(remoteMessage.getNotification().getTitle()
+                                    ,remoteMessage.getNotification().getBody()).build());
+                }else
+                {
+                    mNotificationMessaging = new cNotificationMessaging(getApplicationContext());
+                    mNotificationMessaging.getNotificationManager().notify(109,mNotificationMessaging
+                            .createNotificationWithOutChannelSolicitudMESSAGING(remoteMessage.getNotification().getTitle()
+                                    ,remoteMessage.getNotification().getBody()).build());
+                }
+            }
+
         }
+    }
+
+    @Override
+    public void onDeletedMessages()
+    {
+        Log.e("NOTI","ON DELETE MESSAGES");
+        super.onDeletedMessages();
     }
 }

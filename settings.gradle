@@ -1,3 +1,2 @@
-include ':chat'
 include ':app'
 rootProject.name = "TRYS"

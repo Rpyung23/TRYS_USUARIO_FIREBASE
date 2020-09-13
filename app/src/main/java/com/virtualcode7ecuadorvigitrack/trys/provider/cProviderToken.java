@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 public class cProviderToken
 {
+
+
     public void realToken(final cFirebaseProviderAuth mFirebaseProviderAuth)
     {
         FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(
@@ -26,8 +28,8 @@ public class cProviderToken
                 if (task.isSuccessful())
                 {
                     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                    DatabaseReference databaseReference = firebaseDatabase.getReference();
-                    databaseReference.child("Token").child(mFirebaseProviderAuth.getmFirebaseAuth().getUid())
+                    DatabaseReference databaseReference = firebaseDatabase.getReference("Token");
+                    databaseReference.child(mFirebaseProviderAuth.getmFirebaseAuth().getUid())
                             .setValue(createHashMap(task.getResult().getToken()))
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -48,6 +50,10 @@ public class cProviderToken
         return hashMap;
     }
 
-
-
+    public DatabaseReference readToken(String id)
+    {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference("Token");
+        return databaseReference.child(id);
+    }
 }

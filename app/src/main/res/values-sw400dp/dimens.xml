@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="alto_acnho_circle_view_login">220dp</dimen>
+    <dimen name="textsize_22sp_login_registro">19sp</dimen>
+    <dimen name="textsize_price_card_history_booking">40dp</dimen>
+    <dimen name="alto_acnho_card_history_booking">170dp</dimen>
+    <dimen name="alto_shape_login">300dp</dimen>
+    <dimen name="marginTop_circle_view_login">170dp</dimen>
+</resources>

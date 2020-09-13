@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:fitsSystemWindows="true"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.HistoryBookingActivity">
+    <include layout="@layout/appbar_toolbar">
+    </include>
+    <com.cooltechworks.views.shimmer.ShimmerRecyclerView
+        android:layout_marginTop="?actionBarSize"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/shimmer_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:shimmer_demo_child_count="10"
+        app:shimmer_demo_grid_child_count="2"
+        app:shimmer_demo_layout="@layout/card_hisroty_booking_loading"
+        app:shimmer_demo_layout_manager_type="linear_vertical"
+        app:shimmer_demo_angle="20"
+        />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

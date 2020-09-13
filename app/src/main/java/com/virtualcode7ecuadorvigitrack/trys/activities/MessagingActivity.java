@@ -33,6 +33,10 @@ import com.virtualcode7ecuadorvigitrack.trys.includes.cToolbar;
 import com.virtualcode7ecuadorvigitrack.trys.models.cMessaging;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cClientProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderToken;
+import com.virtualcode7ecuadorvigitrack.trys.volley.cVolleyNotificationSendMessaging;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,12 +45,12 @@ import java.util.HashMap;
 
 public class MessagingActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener
 {
-    String id_driver;
+    private String id_driver;
+    private String id_token_phone;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
 
     private cFirebaseProviderAuth mFirebaseProviderAuth;
-
 
     private static final int PICK_IMAGE_CHAT = 989;
 
@@ -70,6 +74,14 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
     private String url_photo;
     private String Url_photo_IntentClient;
 
+
+
+    private cVolleyNotificationSendMessaging mVolleyNotificationSendMessaging;
+
+
+    private cProviderToken mProviderToken;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -77,8 +89,28 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
         setContentView(R.layout.activity_messaging);
         new cToolbar().showToolbar(MessagingActivity.this,"Mensajeria",true);
 
-        Url_photo_IntentClient = getIntent().getStringExtra("photo_driver");
+        mProviderToken =  new cProviderToken();
 
+        Url_photo_IntentClient = getIntent().getStringExtra("photo_driver");
+        id_driver = getIntent().getStringExtra("id_driver");
+
+        mProviderToken.readToken(id_driver).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                if (snapshot.exists())
+                {
+                    id_token_phone = snapshot.child("token").getValue().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        mVolleyNotificationSendMessaging= new cVolleyNotificationSendMessaging(MessagingActivity.this);
         mFirebaseProfileClient = new cClientProvider();
 
         mButtonSend = findViewById(R.id.id_botton_send_chats);
@@ -86,7 +118,13 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
         mEditTextMessaging = findViewById(R.id.id_edittext_chats);
         mRecyclerViewChats = findViewById(R.id.id_recyclerview_chats);
 
-        //mMessagingArrayList = new ArrayList<>();
+        if(mMessagingArrayList==null)
+        {
+            mMessagingArrayList = new ArrayList<>();
+        }else
+        {
+            mMessagingArrayList.clear();
+        }
 
         mMediaPlayer = new MediaPlayer().create(MessagingActivity.this
                 ,R.raw.sound_msm_chat_activo);
@@ -96,7 +134,7 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference("Messaging");
 
-        id_driver = getIntent().getStringExtra("id_driver");
+
         mMessagingArrayList = new ArrayList<>();
 
         banderaSound =true;
@@ -134,7 +172,7 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
         });
 
         mFirebaseProfileClient.getmDatabaseReference()
-                .child("Clients").child(mFirebaseProviderAuth.getmFirebaseAuth().getUid())
+                .child(mFirebaseProviderAuth.getmFirebaseAuth().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot)
@@ -157,7 +195,7 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
 
     }
 
-    private void sendMessaging(final String msm,String type_msm)
+    private void sendMessaging(final String msm, final String type_msm)
     {
         mDatabaseReference.child(id_driver).push().setValue(creteHashMapMessaging(msm,type_msm)
                 , new DatabaseReference.CompletionListener() {
@@ -167,6 +205,13 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
                 /**ENVIO EXITOSO**/
                 if (error == null || error.getMessage().isEmpty())
                 {
+                    if (type_msm.equals("text"))
+                    {
+                        mVolleyNotificationSendMessaging.sendNotificationVolley("Nuevo Mensaje",msm,id_token_phone);
+                    }else
+                        {
+                            mVolleyNotificationSendMessaging.sendNotificationVolley("Nuevo Mensaje","Imagen recibida",id_token_phone);
+                        }
                     mEditTextMessaging.setText("");
                 }else
                 {
