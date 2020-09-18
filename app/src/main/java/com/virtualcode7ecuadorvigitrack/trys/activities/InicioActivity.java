@@ -14,6 +14,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -168,6 +170,9 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
     private View viewHeaderMenu;
+    /**Alert dialog sin Carrera sin destino**/
+    private AlertDialog mAlertDialogSinDestino;
+    private Button mButtonAlertDialogSinDestino;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,12 +260,72 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                     showAlertDialogPreviewSolicitud();
                 }else
                     {
-                        /** MARKER VACIOS **/
+                       if(markerIamDestino==null)
+                       {
+                           /** CREAR ALERT CARRERA SIN DESTINO**/
+
+                           showALertDialogSinDestino();
+                       }
                     }
             }
         });
     }
 
+    private void showALertDialogSinDestino()
+    {
+        View mView = LayoutInflater.from(InicioActivity.this).inflate(R.layout.alert_dialog_sin_destino,null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(InicioActivity.this);
+        builder.setView(mView);
+        mButtonAlertDialogSinDestino = mView.findViewById(R.id.id_btn_gotoTaxiSinDestino);
+        mAlertDialogSinDestino = builder.create();
+        mAlertDialogSinDestino.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mAlertDialogSinDestino.show();
+        mButtonAlertDialogSinDestino.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                /** OPERACIONES DE ENVIO DE SOLICITUD**/
+
+                FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference("Token/"
+                        +mFirebaseProviderAuth.getmFirebaseAuth().getUid());
+                mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener()
+                {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        if (snapshot.exists())
+                        {
+                            Intent intent = new Intent(InicioActivity.this,
+                                    SoliciteTaxiActivity.class);
+                            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.putExtra("lat_start",markerIam.getPosition().latitude);
+                            intent.putExtra("long_start",markerIam.getPosition().longitude);
+                            intent.putExtra("lat_end",0);
+                            intent.putExtra("long_end",0);
+                            intent.putExtra("id_client",mFirebaseProviderAuth.getmFirebaseAuth().getUid());
+                            intent.putExtra("price",0);
+                            intent.putExtra("distance",0);
+                            intent.putExtra("time",0);
+                            intent.putExtra("fecha",mProviderCalendar.getFecha());
+                            intent.putExtra("token_phone_client",String.valueOf(snapshot.child("token")
+                                    .getValue().toString()));
+                            intent.putExtra("tipo",11);
+                            startActivity(intent);
+                            alertDialog_showPreviewSolicitud.cancel();
+                            finish();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+                    }
+                });
+
+
+            }
+        });
+    }
 
 
     private void showAlertDialogPreviewSolicitud()
@@ -316,6 +381,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             intent.putExtra("fecha",mProviderCalendar.getFecha());
                             intent.putExtra("token_phone_client",String.valueOf(snapshot.child("token")
                                     .getValue().toString()));
+                            intent.putExtra("tipo",1);
                             startActivity(intent);
                             alertDialog_showPreviewSolicitud.cancel();
                             finish();

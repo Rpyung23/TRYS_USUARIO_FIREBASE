@@ -178,7 +178,7 @@ public class cVolleyNotification
     {
         JSONObject jsonObject1 = new JSONObject();
         HashMap<String,Object> hashMapData = new HashMap<>();
-        hashMapData.put("tipo",1);
+        hashMapData.put("tipo",osoSolicitudTaxi.getTipo());
         hashMapData.put("latitud_start",osoSolicitudTaxi.getLatitud_start());
         hashMapData.put("longitud_start",osoSolicitudTaxi.getLongitud_start());
         hashMapData.put("latitud_end",osoSolicitudTaxi.getLatitud_end());
@@ -195,6 +195,7 @@ public class cVolleyNotification
 
         HashMap<String,String> hashMapNotifi = new HashMap<>();
         hashMapNotifi.put("title","NUEVA SOLICITUD DE CARRERA");
+        hashMapNotifi.put("click_action","PreviewSolicitudActivity");
 
         /** SIN ESPECIFICAR EL DESTINO**/
 

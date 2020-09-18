@@ -43,7 +43,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
     private double longitud_fin;
     private double price;
     private String fecha;
-
+    private  int tipo;
     private double time;
     private double distance;
 
@@ -129,7 +129,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
         token_phone_client = getIntent().getStringExtra("token_phone_client");
         time = getIntent().getDoubleExtra("time",0);
         distance = getIntent().getDoubleExtra("distance",0);
-
+        tipo = getIntent().getIntExtra("tipo",0);
 
         textView_estado_solicitud = findViewById(R.id.id_textview_estado_solicitud);
         mTextViewCount = findViewById(R.id.id_textview_cont_tiempo);
@@ -154,7 +154,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
         OSolicitudTaxi.setStatus("create");
         OSolicitudTaxi.setTime(time);
         OSolicitudTaxi.setDistance(distance);
-
+        OSolicitudTaxi.setTipo(tipo);
 
         mGeoFire = new cGeoFire();
         /*mGeoFire.aroundTaxi(new LatLng(latitud_inicio,longitud_inicio)
@@ -234,9 +234,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                     OSolicitudTaxi.setToken_driver_phone(String.valueOf(snapshot.child("token")
                             .getValue().toString()));
                     //OvolleyNotification.createNotificationServer(OSolicitudTaxi);
-
                     OvolleyNotification.createNotificationServerFirebase(OSolicitudTaxi);
-
                     textView_estado_solicitud.setText("ESPERANDO RESPUESTA DEL TAXI");
 
                     readBookingDriver(id_driver,OSolicitudTaxi);

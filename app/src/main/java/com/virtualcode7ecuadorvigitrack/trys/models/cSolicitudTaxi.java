@@ -11,6 +11,8 @@ public class cSolicitudTaxi
     private double price;
     private String status;
     private String fecha;
+    private int tipo;
+
 
     private double distance;
     private double time;
@@ -20,6 +22,14 @@ public class cSolicitudTaxi
 
 
     public cSolicitudTaxi() {}
+
+    public int getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(int tipo) {
+        this.tipo = tipo;
+    }
 
     public String getId_token_client() {
         return id_token_client;

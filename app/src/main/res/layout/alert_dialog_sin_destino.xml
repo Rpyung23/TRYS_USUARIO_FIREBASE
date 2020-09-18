@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:orientation="vertical"
+    android:background="@drawable/round_linear_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_title_carrera_sin_destino"
+            android:textColor="@color/colorPrimaryText"
+            android:gravity="center"
+            android:text="CARRERA SIN DESTINO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:gravity="center"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:textSize="@dimen/textsize_messaging_carrera_sin_destino"
+            android:textStyle="normal"
+            android:text="Desea solicitar un taxi sin especificar su destino ?"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/id_btn_gotoTaxiSinDestino"
+        android:textSize="@dimen/textsize_boton_solicitar_sin_destino"
+        android:textStyle="bold"
+        android:background="@drawable/round_linear_layout"
+        android:textColor="@android:color/white"
+        android:text="@string/text_boton_solicitar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize">
+    </androidx.appcompat.widget.AppCompatButton>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -28,7 +28,7 @@ public class cProviderCalendar
             {
                 dayString = String.valueOf(day);
             }
-        if (mes<10)
+        if ((mes+1)<10)
         {
             mesString = "0"+mes;
         }else

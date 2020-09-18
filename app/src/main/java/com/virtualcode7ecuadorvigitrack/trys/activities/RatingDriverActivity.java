@@ -62,9 +62,8 @@ public class RatingDriverActivity extends AppCompatActivity
                         if (snapshot.exists())
                         {
                             /**  **/
-                            double rating_val = Double.parseDouble(
-                                    snapshot.child("rating").getValue().toString()
-                                            +mRatingBarDriver.getRating());
+                            double rating_val = Double.parseDouble(snapshot.child("rating").getValue().toString())
+                                    +mRatingBarDriver.getRating();
                             mFirebaseProviderDriverRating.updateRatingDriver(id_driver,rating_val/2)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

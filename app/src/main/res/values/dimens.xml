@@ -28,4 +28,9 @@
     <dimen name="textsize_price_card_history_booking">47dp</dimen>
     <dimen name="alto_acnho_card_history_booking">180dp</dimen>
 
+
+    <dimen name="text_size_title_carrera_sin_destino">36sp</dimen>
+    <dimen name="textsize_messaging_carrera_sin_destino">30sp</dimen>
+    <dimen name="textsize_boton_solicitar_sin_destino">29sp</dimen>
+
 </resources>

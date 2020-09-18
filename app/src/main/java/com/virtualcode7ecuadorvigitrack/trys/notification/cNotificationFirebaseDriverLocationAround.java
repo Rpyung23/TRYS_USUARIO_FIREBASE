@@ -19,19 +19,19 @@ public class cNotificationFirebaseDriverLocationAround extends FirebaseMessaging
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage)
     {
-        mMediaPlayer = new MediaPlayer().create(getApplicationContext(), R.raw.sound_driver_around);
-        if(!mMediaPlayer.isPlaying())
+        if (Integer.parseInt(remoteMessage.getData().get("tipo").toString()) == 101)
         {
-            mMediaPlayer.start();
-        }else
+            /**Crear Sonido**/
+            mMediaPlayer = new MediaPlayer().create(getApplicationContext(), R.raw.sound_driver_around);
+            if(!mMediaPlayer.isPlaying())
+            {
+                mMediaPlayer.start();
+            }else
             {
                 mMediaPlayer.stop();
                 mMediaPlayer.start();
             }
-        mNotificationDriverLocationAround = new cNotificationDriverLocationAround(getApplicationContext());
-        if (Integer.parseInt(remoteMessage.getData().get("tipo").toString()) == 101)
-        {
-            /**Crear Sonido**/
+            mNotificationDriverLocationAround = new cNotificationDriverLocationAround(getApplicationContext());
             if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O)
             {
                 /** CON CHANNEL**/
@@ -49,11 +49,12 @@ public class cNotificationFirebaseDriverLocationAround extends FirebaseMessaging
                                     ,remoteMessage.getNotification().getBody())
                                     .build());
                 }
+            /** NUEVO MENSAJE **/
         }else if (Integer.parseInt(remoteMessage.getData().get("tipo").toString()) == 109)
         {
             PowerManager powerManager = (PowerManager) getApplicationContext().getSystemService(POWER_SERVICE);
-            if (!powerManager.isInteractive())
-            {
+//           if (!powerManager.isInteractive())
+  //          {
                 /**NO ESTA ACTIVO**/
                 if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
                 {
@@ -68,7 +69,7 @@ public class cNotificationFirebaseDriverLocationAround extends FirebaseMessaging
                             .createNotificationWithOutChannelSolicitudMESSAGING(remoteMessage.getNotification().getTitle()
                                     ,remoteMessage.getNotification().getBody()).build());
                 }
-            }
+    //        }
 
         }
     }

@@ -21,7 +21,13 @@ public class cClientProvider
     {
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("Name",Ou.getName());
-        hashMap.put("Photo",Ou.getPhoto_url());
+        if (!Ou.getPhoto_url().equals(""))
+        {
+            hashMap.put("Photo",Ou.getPhoto_url());
+        }else
+            {
+                hashMap.put("Photo","null");
+            }
         hashMap.put("Email",Ou.getEmail());
         hashMap.put("Phone",Ou.getPhone());
         return mDatabaseReference.child(Ou.getId_token_()).setValue(hashMap);
