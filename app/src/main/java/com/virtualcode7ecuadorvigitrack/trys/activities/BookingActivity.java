@@ -472,4 +472,9 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
         mBookingDriver.getmDatabaseReference().removeEventListener(mChildEventListenerBooking);
         super.onDestroy();
     }
+
+    @Override
+    public void onBackPressed() {
+        return;
+    }
 }

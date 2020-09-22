@@ -285,7 +285,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view)
             {
                 /** OPERACIONES DE ENVIO DE SOLICITUD**/
-
+                //Toast.makeText(InicioActivity.this, "CLIK", Toast.LENGTH_SHORT).show();
                 FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference("Token/"
                         +mFirebaseProviderAuth.getmFirebaseAuth().getUid());
@@ -298,7 +298,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                         {
                             Intent intent = new Intent(InicioActivity.this,
                                     SoliciteTaxiActivity.class);
-                            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.putExtra("lat_start",markerIam.getPosition().latitude);
                             intent.putExtra("long_start",markerIam.getPosition().longitude);
                             intent.putExtra("lat_end",0);
@@ -312,7 +312,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                                     .getValue().toString()));
                             intent.putExtra("tipo",11);
                             startActivity(intent);
-                            alertDialog_showPreviewSolicitud.cancel();
+                            mAlertDialogSinDestino.cancel();
+                            mAlertDialogSinDestino.dismiss();
                             finish();
                         }
                     }
@@ -369,7 +370,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             DecimalFormat priceFormat = new DecimalFormat("#.##", separadoresPersonalizados);
                             Intent intent = new Intent(InicioActivity.this,
                                     SoliciteTaxiActivity.class);
-                            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent.putExtra("lat_start",markerIam.getPosition().latitude);
                             intent.putExtra("long_start",markerIam.getPosition().longitude);
                             intent.putExtra("lat_end",markerIamDestino.getPosition().latitude);

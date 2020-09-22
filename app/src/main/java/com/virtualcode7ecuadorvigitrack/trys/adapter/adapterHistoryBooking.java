@@ -51,7 +51,10 @@ public class adapterHistoryBooking extends RecyclerView.Adapter<adapterHistoryBo
                         .getFromLocation(historyBookings.get(position).getLat_end()
                                 ,historyBookings.get(position).getLong_end(),1);
                 holder.mTextViewStart.setText(mAddressesStart.get(0).getAddressLine(0));
-                holder.mTextViewEnd.setText(mAddressesEnd.get(0).getAddressLine(0));
+                if(historyBookings.get(position).getLat_end()!=0 && historyBookings.get(position).getLong_end()!=0)
+                {
+                    holder.mTextViewEnd.setText(mAddressesEnd.get(0).getAddressLine(0));
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

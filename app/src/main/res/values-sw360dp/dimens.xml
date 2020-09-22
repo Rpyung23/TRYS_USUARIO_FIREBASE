@@ -9,4 +9,7 @@
     <dimen name="text_size_title_carrera_sin_destino">25sp</dimen>
     <dimen name="textsize_messaging_carrera_sin_destino">20sp</dimen>
     <dimen name="textsize_boton_solicitar_sin_destino">22sp</dimen>
+
+    <dimen name="circle_View_alto_ancho_rating_driver">150dp</dimen>
+    <dimen name="textsize_enviar_calificaiton_driver">20sp</dimen>
 </resources>

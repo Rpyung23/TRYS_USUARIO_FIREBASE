@@ -41,8 +41,12 @@
         <activity android:name=".activities.ProfileClientActivity" />
         <activity android:name=".activities.BookingActivity" />
         <activity
-            android:noHistory="true"
-            android:name=".activities.SoliciteTaxiActivity" />
+            android:name=".activities.SoliciteTaxiActivity"
+            android:parentActivityName=".activities.InicioActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.virtualcode7ecuadorvigitrack.trys.activities.InicioActivity" />
+        </activity>
         <activity android:name=".activities.InicioActivity" />
         <activity
             android:name=".activities.RegisterClientActivity"

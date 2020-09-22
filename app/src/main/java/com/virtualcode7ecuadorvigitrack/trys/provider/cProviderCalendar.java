@@ -30,10 +30,10 @@ public class cProviderCalendar
             }
         if ((mes+1)<10)
         {
-            mesString = "0"+mes;
+            mesString = "0"+(mes+1);
         }else
             {
-                mesString = String.valueOf(mes);
+                mesString = String.valueOf(mes+1);
             }
         return String.valueOf(year)+"-"+mesString+"-"+dayString;
     }
