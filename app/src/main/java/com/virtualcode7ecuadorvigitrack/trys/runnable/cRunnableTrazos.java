@@ -279,5 +279,7 @@ public class cRunnableTrazos implements Runnable
     public void deletepolilineas()
     {
         polyline.remove();
+        latLngArrayList.clear();
+        //getGoogleMap().clear();
     }
 }

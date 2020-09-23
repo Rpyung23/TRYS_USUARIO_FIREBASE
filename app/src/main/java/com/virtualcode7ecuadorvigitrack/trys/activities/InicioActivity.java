@@ -38,6 +38,8 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -79,8 +81,9 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
-public class InicioActivity extends AppCompatActivity implements OnMapReadyCallback
+public class InicioActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener
 {
 
     private GoogleMap mGoogleMap;
@@ -103,16 +106,13 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private cFirebaseProviderAuth mFirebaseProviderAuth;
 
-
     private static  int AUTOCOMPLETE_REQUEST_CODE=150;
 
     private LatLng mLatLngDestino;
 
     private Marker markerIam;
 
-
     private Marker markerIamDestino;
-
 
     private Button mButtonGotoTaxi;
 
@@ -143,7 +143,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                     markerIam = mGoogleMap.addMarker(new MarkerOptions().position(new
                             LatLng(location.getLatitude(),location.getLongitude()))
                             .title("YO")
-                            .draggable(true)
+                            //.draggable(true)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_i_am)));
 
                     if (Geocoder.isPresent())
@@ -178,7 +178,6 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inicio);
-
 
 
         mProviderCalendar = new cProviderCalendar();
@@ -242,10 +241,10 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                         ,Place.Field.LAT_LNG,Place.Field.NAME);
                 Intent intent = new Autocomplete.IntentBuilder
                         (AutocompleteActivityMode.OVERLAY, fields)
-                        .setTypeFilter(TypeFilter.ADDRESS)
+                        //.setTypeFilter(TypeFilter.ADDRESS)
                         //.setTypeFilter(TypeFilter.ESTABLISHMENT)
                         //.setTypeFilter(TypeFilter.CITIES)
-                        //.setCountry("EC")
+                        .setCountry("ECU")
                         .build(InicioActivity.this);
                 startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
             }
@@ -367,7 +366,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                         {
                             DecimalFormatSymbols separadoresPersonalizados = new DecimalFormatSymbols();
                             separadoresPersonalizados.setDecimalSeparator('.');
-                            DecimalFormat priceFormat = new DecimalFormat("#.##", separadoresPersonalizados);
+                            DecimalFormat priceFormat = new DecimalFormat("##.00", separadoresPersonalizados);
                             Intent intent = new Intent(InicioActivity.this,
                                     SoliciteTaxiActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -376,7 +375,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             intent.putExtra("lat_end",markerIamDestino.getPosition().latitude);
                             intent.putExtra("long_end",markerIamDestino.getPosition().longitude);
                             intent.putExtra("id_client",mFirebaseProviderAuth.getmFirebaseAuth().getUid());
-                            intent.putExtra("price",Double.parseDouble(priceFormat.format(mRunnableTrazos.getPrecio_pago_carrera())));
+                            intent.putExtra("price",Double.parseDouble(priceFormat.format(mRunnableTrazos
+                                    .getPrecio_pago_carrera())));
                             intent.putExtra("distance",mRunnableTrazos.getKm_reco());
                             intent.putExtra("time",mRunnableTrazos.getMinu_reco());
                             intent.putExtra("fecha",mProviderCalendar.getFecha());
@@ -397,6 +397,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         });
 
         alertDialog_showPreviewSolicitud = builder.create();
+        alertDialog_showPreviewSolicitud.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog_showPreviewSolicitud.show();
     }
 
@@ -419,6 +420,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap)
     {
         this.mGoogleMap = googleMap;
+        this.mGoogleMap.setOnMarkerDragListener(this);
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);//intervalo de tiempo en q se actualiza en el mapa
         mLocationRequest.setFastestInterval(1000);
@@ -461,10 +463,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                         if(is_day_night())
                         {
                             mRunnableTrazos.setDay_night(1);
-                        }else
-                            {
-
-                            }
+                        }
                         config_runnableTrazos();
                     }else
                         {
@@ -646,5 +645,39 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         mFirebaseProviderWorking.getmDatabaseReference()
                 .removeEventListener(mValueEventListenerAllDriving);
         super.onDestroy();
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker)
+    {
+        if(marker.getId().equals(markerIamDestino.getId()))
+        {
+            if (markerIam!=null)
+            {
+                mRunnableTrazos.deletepolilineas();
+                mRunnableTrazos.setLatitud_final(markerIamDestino.getPosition().latitude);
+                mRunnableTrazos.setLongitud_final(markerIamDestino.getPosition().longitude);
+
+                if(is_day_night())
+                {
+                    mRunnableTrazos.setDay_night(1);
+                }
+
+                mRunnableTrazos.run();
+            }
+        }else if(marker.getId().equals(markerIam.getId()))
+        {
+
+        }
     }
 }
