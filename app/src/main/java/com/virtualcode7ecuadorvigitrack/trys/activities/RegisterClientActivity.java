@@ -105,7 +105,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
 
     cBroadcastMsmAuthPhoneFire mBroadcastMsmAuthPhoneFire;
 
-    private String code_Firebase_;
+    private String code_Firebase_="null";
 
     private Handler mHandlerCountTime;
     private Runnable mRunnable = new Runnable() {
@@ -290,6 +290,13 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         mEditText5 = view_veri_phone.findViewById(R.id.id_text_num_5);
         mEditText6 = view_veri_phone.findViewById(R.id.id_text_num_6);
 
+        mEditText1.setText("");
+        mEditText2.setText("");
+        mEditText3.setText("");
+        mEditText4.setText("");
+        mEditText5.setText("");
+        mEditText6.setText("");
+
 
         mButtonVeri_Cancel = view_veri_phone.findViewById(R.id.id_btn_verificar_cancelar);
 
@@ -447,6 +454,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         switch (view.getId())
         {
             case R.id.id_btn_verificar_cancelar:
+
                 if (code_Firebase_.equals(mEditText1.getText().toString()+mEditText2.getText().toString()
                         +mEditText3.getText().toString()+mEditText4.getText().toString()
                         +mEditText5.getText().toString()+mEditText6.getText().toString()))
