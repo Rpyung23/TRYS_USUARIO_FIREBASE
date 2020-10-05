@@ -17,4 +17,5 @@
     <string name="string_taxi_cercano">BUSCANDO TAXI MAS CERCANO</string>
     <string name="url_create_FCM">http://192.168.1.8/TrysService/Firebase_/create_solicitud.php</string>
     <string name="hint_enter_a_message">Escriba su mensaje</string>
+    <string name="instance_firebase_storage">gs://trys-19c9e.appspot.com</string>
 </resources>

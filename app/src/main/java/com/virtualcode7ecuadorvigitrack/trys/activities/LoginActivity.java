@@ -54,7 +54,18 @@ public class LoginActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
+        Log.e("M",Build.MODEL.toString());
+        Log.e("M",Build.RADIO.toString());
+        Log.e("M",Build.DISPLAY);
+        Log.e("M",Build.getRadioVersion());
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Log.e("SC",String.valueOf(metrics.scaledDensity));
+        Log.e("DP",String.valueOf(metrics.densityDpi));
+        Log.e("D",""+metrics.density);
+        Log.e("HP",""+metrics.heightPixels);
+        Log.e("WP",""+metrics.widthPixels);
+        Log.e("RV",Build.getRadioVersion());
 
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
 
@@ -219,18 +230,7 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onPostResume()
     {
-        Log.e("M",Build.MODEL.toString());
-        Log.e("M",Build.RADIO.toString());
-        Log.e("M",Build.DISPLAY);
-        Log.e("M",Build.getRadioVersion());
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        Log.e("SC",String.valueOf(metrics.scaledDensity));
-        Log.e("DP",String.valueOf(metrics.densityDpi));
-        Log.e("D",""+metrics.density);
-        Log.e("HP",""+metrics.heightPixels);
-        Log.e("WP",""+metrics.widthPixels);
-        Log.e("RV",Build.getRadioVersion());
+
 
         super.onPostResume();
     }

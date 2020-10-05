@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -36,6 +39,9 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.virtualcode7ecuadorvigitrack.trys.R;
 import com.virtualcode7ecuadorvigitrack.trys.broadcast.cBroadcastMsmAuthPhoneFire;
 import com.virtualcode7ecuadorvigitrack.trys.includes.cToolbar;
@@ -43,11 +49,14 @@ import com.virtualcode7ecuadorvigitrack.trys.models.cUser;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cClientProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderClientRating;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderUploadPhoto;
 
+import java.io.ByteArrayOutputStream;
 import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 
 public class RegisterClientActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -78,7 +87,9 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
     private cFirebaseProviderClientRating mFirebaseProviderClientRanting;
 
     private cUser Ou;
-
+    private String url_photo_init;
+    private cProviderUploadPhoto mProviderUploadPhoto;
+    private AlertDialog mAlertDialogProgress;
 
     /** Verification Phone **/
 
@@ -278,6 +289,8 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         View view_veri_phone = LayoutInflater.from(RegisterClientActivity.this)
                 .inflate(R.layout.phone_verification,null,false);
 
+        mProviderUploadPhoto = new cProviderUploadPhoto(RegisterClientActivity.this);
+
         mButtonVeri_Cancel = view_veri_phone.findViewById(R.id.id_btn_verificar_cancelar);
         mTextviewNewIntento = view_veri_phone.findViewById(R.id.id_textview_intentar_nuevamente);
         mTextViewCountTime = view_veri_phone.findViewById(R.id.id_textview_time);
@@ -353,9 +366,68 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         mButtonVeri_Cancel.setOnClickListener(this);
     }
 
-    private void createClient(String email, String pass)
+    private void createClient(final String email, final String pass)
     {
         showAlerDialog();
+        /**
+         * Upload Imagen
+         * **/
+
+
+        mProviderUploadPhoto.uploadPhoto(createByteImagen()).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Toasty.error(RegisterClientActivity.this,e.getMessage().toString(),Toasty.LENGTH_SHORT).show();
+                cancelarAlertProgress();
+            }
+
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+            {
+                /** FOTO SUBIDA**/
+                if (taskSnapshot!=null) {
+                    //
+                    // Driver --->Carpeta
+                    // %2F
+                    //?alt=media&token=5b88a844-15af-4ce8-b55f-ff392cf11b3c
+                    Toasty.success(RegisterClientActivity.this,"FOTO OK",Toasty.LENGTH_SHORT).show();
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    Log.e("PATH",taskSnapshot.getMetadata().getPath());
+                    StorageReference storageRef = storage.getReference(taskSnapshot.getMetadata().getPath());
+                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri)
+                        {
+                            url_photo_init = String.valueOf(uri);
+                            createClientFirebase(email,pass);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            cancelarAlertProgress();
+                            Toasty.error(RegisterClientActivity.this,e.getMessage().toString(),
+                                    Toasty.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    /*url_photo_init = "https://firebasestorage.googleapis.com/v0/b/trys-19c9e.appspot.com/o/Driver%2F"+
+                            taskSnapshot.getMetadata().getPath()+"?alt=media&token="+taskSnapshot.getStorage().get;*/
+                }else
+                {
+                    cancelarAlertProgress();
+                    Toast.makeText(RegisterClientActivity.this, "Error Foto", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+    }
+
+    private void createClientFirebase(String email,String pass)
+    {
         mFirebaseProviderAuth.createUser(email,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>()
         {
             @Override
@@ -364,6 +436,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                 if (task.isSuccessful())
                 {
                     Ou.setId_token_(mFirebaseProviderAuth.getmFirebaseAuth().getUid());
+                    Ou.setPhoto_url(url_photo_init);
                     mClientProvider.createNewClient(Ou).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task)
@@ -372,11 +445,11 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                         }
                     });
                 }else
-                    {
-                        dismissAlertDialog();
-                        Toast.makeText(RegisterClientActivity.this, "FAIL!", Toast.LENGTH_SHORT)
-                                .show();
-                    }
+                {
+                    dismissAlertDialog();
+                    Toast.makeText(RegisterClientActivity.this, "FAIL!", Toast.LENGTH_SHORT)
+                            .show();
+                }
             }
         }).addOnFailureListener(new OnFailureListener()
         {
@@ -497,7 +570,11 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         mAlertDialogNoVerificationPhone.show();
     }
 
-
+    private void cancelarAlertProgress()
+    {
+        alertDialog.cancel();
+        alertDialog.dismiss();
+    }
     @Override
     protected void onResume()
     {
@@ -514,5 +591,13 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         }
         super.onDestroy();
     }
+    private byte[] createByteImagen()
+    {
+        Bitmap bitmap = ((BitmapDrawable)mCircleImageViewClient.getDrawable()).getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,byteArrayOutputStream);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        return bytes;
+    }
 }

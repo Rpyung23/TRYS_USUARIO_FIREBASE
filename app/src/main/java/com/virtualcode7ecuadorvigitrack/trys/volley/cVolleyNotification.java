@@ -234,13 +234,13 @@ public class cVolleyNotification
                 }
             }
 
-
-
         try
         {
             jsonObject1.put("to",osoSolicitudTaxi.getToken_driver_phone());
+            jsonObject1.put("priority","high");
             jsonObject1.put("data",new JSONObject(hashMapData));
-            jsonObject1.put("notification",new JSONObject(hashMapNotifi));
+            jsonObject1.put("time_to_live",0);
+           // jsonObject1.put("notification",new JSONObject(hashMapNotifi));
         }catch (JSONException e)
         {
             Log.e("ERRORJSON",e.getMessage());

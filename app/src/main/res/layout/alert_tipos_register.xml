@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat android:orientation="vertical"
+    android:background="@color/colorSecondaryText"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="15dp"
+        >
+        <androidx.cardview.widget.CardView
+            android:id="@+id/id_card_register_email"
+            app:cardElevation="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:background="@drawable/round_register_email"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center_vertical"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    app:srcCompat="@drawable/email"
+                    app:tint="@color/colorSecondaryText"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center_vertical"
+                    >
+                </androidx.appcompat.widget.AppCompatImageView>
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:textSize="25dp"
+                    android:text="Correo Electónico"
+                    android:textColor="@color/colorSecondaryText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    >
+                </TextView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/id_card_register_facebook"
+            android:layout_marginTop="10dp"
+            app:cardElevation="20dp"
+            app:cardCornerRadius="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@drawable/border_botton_register_facebook"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:srcCompat="@drawable/facebook"
+                    android:scaleType="centerCrop"
+                    >
+                </androidx.appcompat.widget.AppCompatImageView>
+                <TextView
+                    android:layout_marginLeft="5dp"
+                    android:textStyle="bold"
+                    android:textSize="25dp"
+                    android:text="Facebook"
+                    android:textColor="@color/colorPrimaryLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    >
+                </TextView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
