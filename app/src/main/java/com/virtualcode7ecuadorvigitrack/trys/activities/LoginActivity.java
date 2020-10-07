@@ -3,6 +3,7 @@ package com.virtualcode7ecuadorvigitrack.trys.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -10,14 +11,23 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -26,8 +36,13 @@ import com.virtualcode7ecuadorvigitrack.trys.R;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderToken;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.Collections;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
+import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity
 {
@@ -46,6 +61,13 @@ public class LoginActivity extends AppCompatActivity
     private AlertDialog alertDialog_permission;
 
     private android.app.AlertDialog mAlertDialogLogin;
+
+
+    private AlertDialog mAlertDialogOPCRegister;
+
+    /** FACEBOOK **/
+    private CallbackManager mCallbackManager;
+
 
 
 
@@ -68,6 +90,7 @@ public class LoginActivity extends AppCompatActivity
         Log.e("RV",Build.getRadioVersion());
 
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
+        mCallbackManager = CallbackManager.Factory.create();
 
         mButtonRegister = findViewById(R.id.id_registro_client);
         mButtonLogin = findViewById(R.id.id_login_client);
@@ -133,9 +156,62 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                openActivityRegisterClient();
+                CardView mCardFacebook;
+                CardView mCardEmail;
+                View view1 = LayoutInflater.from(LoginActivity.this).inflate(R.layout.alert_tipos_register,null);
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
+                mBuilder.setView(view1);
+                mCardFacebook = view1.findViewById(R.id.id_card_register_facebook);
+                mCardEmail = view1.findViewById(R.id.id_card_register_email);
+                mAlertDialogOPCRegister = mBuilder.create();
+                mAlertDialogOPCRegister.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                mCardFacebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                       LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
+                                Arrays.asList("email","public_profile"));
+
+                        mAlertDialogOPCRegister.dismiss();
+                    }
+                });
+                mCardEmail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        mAlertDialogOPCRegister.dismiss();
+                        openActivityRegisterClient();
+                    }
+                });
+                mAlertDialogOPCRegister.show();
             }
         });
+
+        LoginManager.getInstance().registerCallback(mCallbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult)
+                    {
+
+                        Log.e("LoginResult",loginResult.toString());
+                    }
+
+                    @Override
+                    public void onCancel()
+                    {
+                        Toasty.info(LoginActivity.this,"FACEBOOK CANCELADO"
+                                ,Toasty.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception)
+                    {
+                        Toasty.error(LoginActivity.this, exception.getMessage(),Toasty.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
 
 
     }
@@ -205,6 +281,16 @@ public class LoginActivity extends AppCompatActivity
         cProviderToken mProviderToken  = new cProviderToken();
         mProviderToken.realToken(mFirebaseProviderAuth);
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions
             , @NonNull int[] grantResults)
@@ -223,8 +309,6 @@ public class LoginActivity extends AppCompatActivity
                     showrequestPermissions();
                 }
         }
-
-
     }
 
     @Override
