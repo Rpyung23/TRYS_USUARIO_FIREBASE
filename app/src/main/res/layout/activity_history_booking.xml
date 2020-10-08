@@ -9,16 +9,60 @@
     tools:context=".activities.HistoryBookingActivity">
     <include layout="@layout/appbar_toolbar">
     </include>
-    <com.cooltechworks.views.shimmer.ShimmerRecyclerView
-        android:layout_marginTop="?actionBarSize"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shimmer_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:shimmer_demo_child_count="10"
-        app:shimmer_demo_grid_child_count="2"
-        app:shimmer_demo_layout="@layout/card_hisroty_booking_loading"
-        app:shimmer_demo_layout_manager_type="linear_vertical"
-        app:shimmer_demo_angle="20"
-        />
+        android:layout_marginTop="?actionBarSize"
+         />
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_FrameLayout"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <include
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                layout="@layout/card_hisroty_booking_loading"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </include>
+            <include
+                android:layout_marginBottom="10dp"
+                layout="@layout/card_hisroty_booking_loading"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </include>
+            <include
+                android:layout_marginBottom="10dp"
+                layout="@layout/card_hisroty_booking_loading"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </include>
+            <include
+                android:layout_marginBottom="10dp"
+                layout="@layout/card_hisroty_booking_loading"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </include>
+            <include
+                android:layout_marginBottom="10dp"
+                layout="@layout/card_hisroty_booking_loading"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </include>
+            <include
+                android:layout_marginBottom="10dp"
+                layout="@layout/card_hisroty_booking_loading"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </include>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

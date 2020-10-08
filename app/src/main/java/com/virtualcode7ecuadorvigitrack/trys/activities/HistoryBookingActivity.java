@@ -7,8 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
-import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -22,9 +23,12 @@ import com.virtualcode7ecuadorvigitrack.trys.provider.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import es.dmoral.toasty.Toasty;
+
 public class HistoryBookingActivity extends AppCompatActivity {
 
-    private ShimmerRecyclerView shimmerRecycler;
+    private ShimmerFrameLayout mShimmerFrameLayout;
+    private RecyclerView shimmerRecycler;
     private ArrayList<cHistoryBooking> mArraysHistoryBookings;
     private adapterHistoryBooking mAdapterHistoryBooking;
     private cFirebaseHistoryBooking mFirebaseHistoryBooking;
@@ -34,14 +38,14 @@ public class HistoryBookingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_booking);
+
         new cToolbar().showToolbar(HistoryBookingActivity.this,"HISTORIAL DE CARRERAS",true);
-        shimmerRecycler = (ShimmerRecyclerView) findViewById(R.id.shimmer_recycler_view);
-        shimmerRecycler.showShimmerAdapter();
+        shimmerRecycler = findViewById(R.id.shimmer_recycler_view);
+        mShimmerFrameLayout = findViewById(R.id.shimmer_FrameLayout);
         mFirebaseHistoryBooking = new cFirebaseHistoryBooking();
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(HistoryBookingActivity.this);
         mLinearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-        shimmerRecycler.setDemoLayoutManager(ShimmerRecyclerView.LayoutMangerType.LINEAR_VERTICAL);
         mArraysHistoryBookings = new ArrayList<>();
         mAdapterHistoryBooking = new adapterHistoryBooking(mArraysHistoryBookings,HistoryBookingActivity.this);
         shimmerRecycler.setLayoutManager(mLinearLayoutManager);
@@ -51,11 +55,14 @@ public class HistoryBookingActivity extends AppCompatActivity {
     @Override
     protected void onPostResume()
     {
-        mFirebaseHistoryBooking.readHistoryBooking(mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser().getUid())
+        mFirebaseHistoryBooking.readHistoryBooking().orderByChild("id_client")
+                .equalTo(mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
+                snapshot.getRef().orderByChild("fecha");
+
                 for (DataSnapshot mDataSnapshot : snapshot.getChildren())
                 {
                     if (mDataSnapshot.exists())
@@ -80,12 +87,27 @@ public class HistoryBookingActivity extends AppCompatActivity {
                             mArraysHistoryBookings.add(mHistoryBooking);
                             Log.e("ADD","ok");
                         }
-                    }
+                    }else
+                        {
+                            Toasty.info(HistoryBookingActivity.this,"NO EXISTEN DATOS"
+                                    ,Toasty.LENGTH_LONG).show();
+                            mShimmerFrameLayout.stopShimmer();
+                            mShimmerFrameLayout.setVisibility(View.INVISIBLE);
+                        }
                 }
                 if (mArraysHistoryBookings!=null && mArraysHistoryBookings.size()>0)
                 {
                     Collections.reverse(mArraysHistoryBookings);
-                }
+                    Toasty.success(HistoryBookingActivity.this,"OK",Toasty.LENGTH_LONG).show();
+                    mShimmerFrameLayout.stopShimmer();
+                    mShimmerFrameLayout.setVisibility(View.INVISIBLE);
+                }else
+                    {
+                        Toasty.info(HistoryBookingActivity.this,"NO EXISTEN DATOS"
+                                ,Toasty.LENGTH_LONG).show();
+                        mShimmerFrameLayout.stopShimmer();
+                        mShimmerFrameLayout.setVisibility(View.INVISIBLE);
+                    }
                 mAdapterHistoryBooking.notifyDataSetChanged();
             }
             @Override

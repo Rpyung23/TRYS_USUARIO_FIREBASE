@@ -109,68 +109,75 @@ public class ProfileActivity extends AppCompatActivity
                         || !mTextInputEditTextEmail.getText().toString().equals(email)
                         ||ban_foto)
                 {
-                    final cUser mUser = new cUser();
-                    mUser.setId_token_(mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser().getUid());
-                    mUser.setPhoto_url(img_url);
-                    mUser.setName(mTextInputEditTextName.getText().toString());
-                    mUser.setEmail(mTextInputEditTextEmail.getText().toString());
-                    mUser.setPhone(mTextInputEditTextPhone.getText().toString());
-                    crearProgressDialogUpdate();
-                    if (ban_foto)
+                    if (mTextInputEditTextPhone.getText().toString().length()>8
+                            && mTextInputEditTextPhone.getText().toString().length()<11)
                     {
-                        /**Subir foto primero**/
-                        mProviderUploadPhoto.uploadPhoto(createByteImagen())
-                                .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e)
-                            {
-                                cancelarAlertProgress();
-                                Toasty.error(ProfileActivity.this,e.getMessage().toString()
-                                        ,Toasty.LENGTH_SHORT).show();
-                            }
-
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                            {
-                                /** FOTO SUBIDA**/
-                                if (taskSnapshot!=null) {
-
-                                    Toasty.success(ProfileActivity.this,"FOTO OK",Toasty.LENGTH_SHORT).show();
-                                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                                    Log.e("PATH",taskSnapshot.getMetadata().getPath());
-                                    StorageReference storageRef = storage.getReference(taskSnapshot.getMetadata().getPath());
-                                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri)
-                                        {
-                                            img_url = String.valueOf(uri);
-                                            mUser.setPhoto_url(img_url);
-                                            clientUpdate(mUser);
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
+                        final cUser mUser = new cUser();
+                        mUser.setId_token_(mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser().getUid());
+                        mUser.setPhoto_url(img_url);
+                        mUser.setName(mTextInputEditTextName.getText().toString());
+                        mUser.setEmail(mTextInputEditTextEmail.getText().toString());
+                        mUser.setPhone(mTextInputEditTextPhone.getText().toString());
+                        crearProgressDialogUpdate();
+                        if (ban_foto)
+                        {
+                            /**Subir foto primero**/
+                            mProviderUploadPhoto.uploadPhoto(createByteImagen())
+                                    .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e)
                                         {
                                             cancelarAlertProgress();
-                                            Toasty.error(ProfileActivity.this,e.getMessage().toString(),
-                                                    Toasty.LENGTH_SHORT).show();
+                                            Toasty.error(ProfileActivity.this,e.getMessage().toString()
+                                                    ,Toasty.LENGTH_SHORT).show();
                                         }
-                                    });
 
-                                }else
+                                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
                                 {
-                                    cancelarAlertProgress();
-                                    Toast.makeText(ProfileActivity.this, "Error Foto",
-                                            Toast.LENGTH_SHORT).show();
+                                    /** FOTO SUBIDA**/
+                                    if (taskSnapshot!=null) {
+
+                                        Toasty.success(ProfileActivity.this,"FOTO OK",Toasty.LENGTH_SHORT).show();
+                                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                                        Log.e("PATH",taskSnapshot.getMetadata().getPath());
+                                        StorageReference storageRef = storage.getReference(taskSnapshot.getMetadata().getPath());
+                                        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                            @Override
+                                            public void onSuccess(Uri uri)
+                                            {
+                                                img_url = String.valueOf(uri);
+                                                mUser.setPhoto_url(img_url);
+                                                clientUpdate(mUser);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e)
+                                            {
+                                                cancelarAlertProgress();
+                                                Toasty.error(ProfileActivity.this,e.getMessage().toString(),
+                                                        Toasty.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+                                    }else
+                                    {
+                                        cancelarAlertProgress();
+                                        Toast.makeText(ProfileActivity.this, "Error Foto",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
 
 
-                    }else
+                        }else
                         {
                             clientUpdate(mUser);
+                        }
+                    }else
+                        {
+                            Toasty.info(ProfileActivity.this,"Numero no valido",Toasty.LENGTH_LONG).show();
                         }
                 }else
                     {

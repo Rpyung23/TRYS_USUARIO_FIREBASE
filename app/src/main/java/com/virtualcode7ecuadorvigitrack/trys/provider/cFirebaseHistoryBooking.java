@@ -12,10 +12,10 @@ public class cFirebaseHistoryBooking
     public cFirebaseHistoryBooking()
     {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference("HistoryBooking");
+        mDatabaseReference = mFirebaseDatabase.getReference("HistoryBooking/");
     }
 
-    public DatabaseReference readHistoryBooking(String id_client)
+    public DatabaseReference readHistoryBooking()
     {
         return mDatabaseReference;
     }

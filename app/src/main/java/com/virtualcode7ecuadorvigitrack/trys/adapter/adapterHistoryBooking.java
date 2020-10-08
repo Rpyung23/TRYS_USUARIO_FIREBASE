@@ -3,6 +3,7 @@ package com.virtualcode7ecuadorvigitrack.trys.adapter;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,10 +56,12 @@ public class adapterHistoryBooking extends RecyclerView.Adapter<adapterHistoryBo
                 {
                     holder.mTextViewEnd.setText(mAddressesEnd.get(0).getAddressLine(0));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException e)
+            {
+                Log.e("ADD",e.getMessage());
             }
         }
+        Log.e("ADD","ON BIND");
     }
 
     @Override
