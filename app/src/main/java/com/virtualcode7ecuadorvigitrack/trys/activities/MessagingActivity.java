@@ -87,7 +87,7 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
-        new cToolbar().showToolbar(MessagingActivity.this,"Mensajeria",true);
+        new cToolbar().showToolbar(MessagingActivity.this,"Mensajeria",false);
 
         mProviderToken =  new cProviderToken();
 
@@ -332,15 +332,6 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
     }
 
 
-
-
-    @Override
-    public void onBackPressed()
-    {
-        Intent intent = new Intent(MessagingActivity.this,InicioActivity.class);
-        startActivity(intent);
-        super.onBackPressed();
-    }
 
     @Override
     protected void onDestroy()

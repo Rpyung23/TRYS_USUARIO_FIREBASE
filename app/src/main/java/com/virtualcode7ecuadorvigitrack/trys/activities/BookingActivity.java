@@ -221,7 +221,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                                     intent.putExtra("id_driver",id_driver);
                                     intent.putExtra("photo_driver",snapshot.child("Photo")
                                             .getValue().toString());
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                 }else
                                 {

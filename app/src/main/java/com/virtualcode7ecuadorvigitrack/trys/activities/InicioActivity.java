@@ -361,6 +361,9 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     {
         View view_alert = LayoutInflater.from(InicioActivity.this).inflate(R.layout.view_preview_solicitud
                 ,null);
+        DecimalFormatSymbols separadoresPersonalizados = new DecimalFormatSymbols();
+        separadoresPersonalizados.setDecimalSeparator('.');
+        DecimalFormat priceFormat = new DecimalFormat("##.00", separadoresPersonalizados);
 
         TextView textView_start = view_alert.findViewById(R.id.id_textview_incio_solicitud);
         TextView textView_end = view_alert.findViewById(R.id.id_text_destino_solicitud);
@@ -377,7 +380,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         textView_end.setText(mEditTextMyDestino.getText().toString());
         textView_km.setText(mRunnableTrazos.getKm_reco()+" km");
         textView_time.setText(mRunnableTrazos.getMinu_reco()+" minutos");
-        textView_price.setText(mRunnableTrazos.getPrecio_pago_carrera()+" $");
+        textView_price.setText(Double.parseDouble(priceFormat.format(mRunnableTrazos
+                .getPrecio_pago_carrera()))+" $");
 
         mButtonConfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -650,7 +654,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             Intent intent_ = new Intent(InicioActivity.this
                                     ,BookingActivity.class);
 
-                            intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            //intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             intent_.putExtra("id_driver",snapshot1.child("id_driver").getValue().toString());
                             intent_.putExtra("latitud_start",Double.parseDouble(snapshot1.child("latitud_start")
                                     .getValue().toString()));

@@ -28,37 +28,37 @@
             <include
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                layout="@layout/card_hisroty_booking_loading"
+                layout="@layout/card_history_booking_loading"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
             </include>
             <include
                 android:layout_marginBottom="10dp"
-                layout="@layout/card_hisroty_booking_loading"
+                layout="@layout/card_history_booking_loading"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
             </include>
             <include
                 android:layout_marginBottom="10dp"
-                layout="@layout/card_hisroty_booking_loading"
+                layout="@layout/card_history_booking_loading"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
             </include>
             <include
                 android:layout_marginBottom="10dp"
-                layout="@layout/card_hisroty_booking_loading"
+                layout="@layout/card_history_booking_loading"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
             </include>
             <include
                 android:layout_marginBottom="10dp"
-                layout="@layout/card_hisroty_booking_loading"
+                layout="@layout/card_history_booking_loading"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
             </include>
             <include
                 android:layout_marginBottom="10dp"
-                layout="@layout/card_hisroty_booking_loading"
+                layout="@layout/card_history_booking_loading"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent">
             </include>
