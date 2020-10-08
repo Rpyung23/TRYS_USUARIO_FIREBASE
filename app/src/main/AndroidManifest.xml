@@ -25,7 +25,14 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-        <activity android:name=".activities.ProfileActivity"></activity>
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:parentActivityName=".activities.InicioActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.virtualcode7ecuadorvigitrack.trys.activities.InicioActivity" />
+        </activity>
         <activity
             android:name=".activities.HistoryBookingActivity"
             android:parentActivityName=".activities.InicioActivity">
@@ -41,7 +48,6 @@
                 android:value="com.virtualcode7ecuadorvigitrack.trys.activities.BookingActivity" />
         </activity>
         <activity android:name=".activities.RatingDriverActivity" />
-        <activity android:name=".activities.ProfileClientActivity" />
         <activity android:name=".activities.BookingActivity" />
         <activity
             android:name=".activities.SoliciteTaxiActivity"

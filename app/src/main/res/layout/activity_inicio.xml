@@ -45,6 +45,7 @@
             android:layout_height="?actionBarSize">
         </androidx.appcompat.widget.AppCompatButton>
 
+
     </FrameLayout>
     <com.rom4ek.arcnavigationview.ArcNavigationView
         android:id="@+id/nav_view"
@@ -59,4 +60,5 @@
         app:arc_width="90dp"
         >
     </com.rom4ek.arcnavigationview.ArcNavigationView>
+
 </androidx.drawerlayout.widget.DrawerLayout>

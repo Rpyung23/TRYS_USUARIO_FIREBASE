@@ -19,6 +19,13 @@
         >
     </item>
     <item
+        android:icon="@drawable/ic_info_outline_white_24dp"
+        android:iconTint="@color/colorPrimaryText"
+        android:id="@+id/id_informacion"
+        android:title="INFORMACIÓN"
+        >
+    </item>
+    <item
         android:icon="@drawable/singout"
         android:id="@+id/id_singOut"
         android:title="CERRAR SESION"

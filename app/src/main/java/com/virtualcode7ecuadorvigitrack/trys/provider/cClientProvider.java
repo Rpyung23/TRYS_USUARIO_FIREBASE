@@ -41,4 +41,21 @@ public class cClientProvider
     {
         return mDatabaseReference.child(id_client);
     }
+
+    public Task<Void> UpdateClient(cUser oU)
+    {
+        return mDatabaseReference.child(oU.getId_token_())
+                .updateChildren(createHashClientUpdate(oU));
+    }
+
+    private HashMap<String,Object> createHashClientUpdate(cUser oU)
+    {
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("Email",oU.getEmail());
+        hashMap.put("Name", oU.getName());
+        hashMap.put("Phone",oU.getPhone());
+        hashMap.put("Photo",oU.getPhoto_url());
+
+        return hashMap;
+    }
 }

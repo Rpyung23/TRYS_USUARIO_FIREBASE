@@ -126,23 +126,32 @@ public class LoginActivity extends AppCompatActivity
                 if (!mTextInputEditTextEmail.getText().toString().isEmpty() &&
                         !mTextInputEditTextPass.getText().toString().isEmpty())
                 {
-                    mFirebaseProviderAuth.loginUp(mTextInputEditTextEmail.getText().toString()
-                            ,mTextInputEditTextPass.getText().toString())
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>()
-                            {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task)
+                    int size = mTextInputEditTextEmail.getText().length();
+                    String email_part = mTextInputEditTextEmail.getText().toString();
+                    if (!email_part.contains("@vigitrack.com"))
+                    {
+                        mFirebaseProviderAuth.loginUp(mTextInputEditTextEmail.getText().toString()
+                                ,mTextInputEditTextPass.getText().toString())
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>()
                                 {
-                                    if (task.isSuccessful())
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task)
                                     {
-                                        abrirActivityInicio();
-                                    }else
-                                    {
-                                        Toast.makeText(LoginActivity.this, "Datos no validos !!!"
-                                                , Toast.LENGTH_SHORT).show();
+                                        if (task.isSuccessful())
+                                        {
+                                            abrirActivityInicio();
+                                        }else
+                                        {
+                                            Toast.makeText(LoginActivity.this, "Datos no validos !!!"
+                                                    , Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
+                                });
+                    }else
+                        {
+                            Toasty.info(LoginActivity.this,"EMAIL NO CORRESPONDE !!",
+                                    Toasty.LENGTH_LONG).show();
+                        }
                 }else
                 {
                     Toast.makeText(LoginActivity.this, "Existen Datos vacios!!"

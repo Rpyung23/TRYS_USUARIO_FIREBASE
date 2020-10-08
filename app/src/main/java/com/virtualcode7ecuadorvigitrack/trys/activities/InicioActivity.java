@@ -65,6 +65,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.virtualcode7ecuadorvigitrack.trys.R;
 import com.virtualcode7ecuadorvigitrack.trys.includes.cToolbar;
+import com.virtualcode7ecuadorvigitrack.trys.models.cUser;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cClientProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderWorking;
@@ -126,6 +127,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private ValueEventListener mValueEventListenerAllDriving;
 
+    private cUser oUser = new cUser();
+
     LocationCallback mLocationCallback = new LocationCallback()
     {
         @Override
@@ -145,6 +148,10 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             .title("YO")
                             //.draggable(true)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_i_am)));
+
+
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(markerIam.getPosition().latitude
+                            ,markerIam.getPosition().longitude),18));
 
                     if (Geocoder.isPresent())
                     {
@@ -227,6 +234,17 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             finish();
                         }
                         break;
+                    case R.id.id_perfil:
+                        Intent intent1 = new Intent(InicioActivity.this,ProfileActivity.class);
+                        intent1.putExtra("img_url",oUser.getPhoto_url());
+                        intent1.putExtra("email",oUser.getEmail());
+                        intent1.putExtra("phone",oUser.getPhone());
+                        intent1.putExtra("name",oUser.getName());
+                        startActivity(intent1);
+                        break;
+                    case R.id.id_informacion:
+                        createAlertDialogInformacion();
+                        break;
                 }
                 return false;
             }
@@ -268,6 +286,17 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
             }
         });
+    }
+
+    private void createAlertDialogInformacion()
+    {
+        View mView = LayoutInflater.from(InicioActivity.this).inflate(R.layout.alert_informacion,null);
+        AlertDialog alertDialog;
+        AlertDialog.Builder builder = new AlertDialog.Builder(InicioActivity.this);
+        builder.setView(mView);
+        alertDialog = builder.create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.show();
     }
 
     private void showALertDialogSinDestino()
@@ -404,6 +433,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     private void openActivityLogin()
     {
         Intent intent = new Intent(InicioActivity.this,LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -425,7 +455,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         mLocationRequest.setInterval(1000);//intervalo de tiempo en q se actualiza en el mapa
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//mayor precision
-        mLocationRequest.setSmallestDisplacement(5);
+        mLocationRequest.setSmallestDisplacement(0);
         mRunnableTrazos = new cRunnableTrazos(InicioActivity.this,mGoogleMap);
         startLocationClient();
         readingGpsAllWorking();
@@ -546,6 +576,11 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             .into(circleImageView);
                     textViewName.setText(snapshot.child("Name").getValue().toString());
                     textViewPhone.setText(snapshot.child("Phone").getValue().toString());
+
+                    oUser.setPhone(snapshot.child("Phone").getValue().toString());
+                    oUser.setEmail(snapshot.child("Email").getValue().toString());
+                    oUser.setName(snapshot.child("Name").getValue().toString());
+                    oUser.setPhoto_url(snapshot.child("Photo").getValue().toString());
                 }
             }
 
