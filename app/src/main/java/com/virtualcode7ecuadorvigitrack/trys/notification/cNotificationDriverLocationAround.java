@@ -54,25 +54,25 @@ public class cNotificationDriverLocationAround
             NotificationChannel notificationChannel = new NotificationChannel(CODE_CHANEL_NOTIFICATION_AROUND
                     ,"CHANNEL_DRIVER_LOCATION_AROUND",NotificationManager.IMPORTANCE_HIGH);
 
-
+/*
             /**Creo los atributos del audio**/
-            AudioAttributes.Builder builder = new AudioAttributes.Builder()
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC) /**ESpecifico que es musica**/
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION);/**Que lo voy ausar como notificacion**/
+           /* AudioAttributes.Builder builder = new AudioAttributes.Builder()
+                    //.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC) /**ESpecifico que es musica**/
+                   // .setUsage(AudioAttributes.USAGE_NOTIFICATION);/**Que lo voy ausar como notificacion**/
 
-            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q)
+            /*if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.Q)
             {
                 /**Permito que cualquiera aceda al sonido**/
-                builder.setAllowedCapturePolicy(AudioAttributes.ALLOW_CAPTURE_BY_ALL);
-            }
+                /*builder.setAllowedCapturePolicy(AudioAttributes.ALLOW_CAPTURE_BY_ALL);
+            }*/
 
-            AudioTrack audioTrack = new AudioTrack.Builder()
+            /*AudioTrack audioTrack = new AudioTrack.Builder()
                     .setPerformanceMode(AudioTrack.PERFORMANCE_MODE_LOW_LATENCY)
-                    .build();
+                    .build();*/
 
-            builder.setFlags(audioTrack.getPerformanceMode());
-            notificationChannel.setSound(Uri.parse("android.resource://"
-                    + context.getPackageName() + "/" +R.raw.sound_driver_around),builder.build());
+            //builder.setFlags(audioTrack.getPerformanceMode());
+           /* notificationChannel.setSound(Uri.parse("android.resource://"
+                    + context.getPackageName() + "/" +R.raw.sound_driver_around),builder.build());*/
 
             return notificationChannel;
         }else

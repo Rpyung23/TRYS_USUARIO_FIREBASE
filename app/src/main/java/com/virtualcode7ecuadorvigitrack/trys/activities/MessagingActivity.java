@@ -74,8 +74,6 @@ public class MessagingActivity extends AppCompatActivity implements MediaPlayer.
     private String url_photo;
     private String Url_photo_IntentClient;
 
-
-
     private cVolleyNotificationSendMessaging mVolleyNotificationSendMessaging;
 
 
