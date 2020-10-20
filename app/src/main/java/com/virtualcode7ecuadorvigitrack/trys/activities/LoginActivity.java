@@ -345,4 +345,10 @@ public class LoginActivity extends AppCompatActivity
         if (mAlertDialogLogin!=null){hideProgreesLogin();}
         super.onDestroy();
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        return;
+    }
 }

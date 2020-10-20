@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -157,6 +158,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         new cToolbar().showToolbar(this,getString(R.string.toolbar_regitro_client)
                 ,true);
 
+        callBroadCastReciverSms();
 
         mButtonCreateClient = findViewById(R.id.id_button_create_client);
         mCircleImageViewClient = findViewById(R.id.id_circleview_photo_client);
@@ -328,7 +330,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         mAlertDialogVerifiPhone.show();
 
 
-        callBroadCastReciverSms();
+
 
 
 
@@ -475,6 +477,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                             dismissAlertDialog();
                             Toast.makeText(RegisterClientActivity.this, "Registro Completo", Toast.LENGTH_SHORT)
                                     .show();
+                            getApplicationContext().unregisterReceiver(mBroadcastMsmAuthPhoneFire);
                             Intent intent = new Intent(RegisterClientActivity.this
                                     ,InicioActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -584,7 +587,6 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
     @Override
     protected void onDestroy()
     {
-        this.unregisterReceiver(mBroadcastMsmAuthPhoneFire);
         if (mHandlerCountTime!=null)
         {
             mHandlerCountTime.removeCallbacks(mRunnable);
