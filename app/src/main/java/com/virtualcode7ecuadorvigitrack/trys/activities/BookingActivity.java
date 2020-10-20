@@ -14,6 +14,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,7 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -60,6 +63,7 @@ import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTrazos;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -75,6 +79,9 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     private double latitud_end;
     private double longitud_end;
     private double price;
+    private float grados=90;
+
+    private LatLng mLatLngAnt;
 
     private Marker mMarkerDriver;
 
@@ -338,9 +345,17 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                             .getValue().toString());
                     double lng = Double.parseDouble(snapshot.child("l").child("1")
                             .getValue().toString());
+                    if (mLatLngAnt==null){mLatLngAnt=new LatLng(lat,lng);}
+
                     mMarkerDriver = mGoogleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat,lng))
+                            .position(new LatLng(lat,lng)).rotation(getBearing(mLatLngAnt,new LatLng(lat,lng)))
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo)));
+
+                    mLatLngAnt = new LatLng(lat,lng);
+
+
+                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMarkerDriver.getPosition().latitude,mMarkerDriver.getPosition().longitude)
+                            ,17));
                 }
             }
 
@@ -349,6 +364,22 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
 
             }
         });
+    }
+
+    private float getBearing(LatLng begin,LatLng end)
+    {
+        double lat = Math.abs(begin.latitude - end.latitude);
+        double lng = Math.abs(begin.longitude - end.longitude);
+
+        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)));
+        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 90);
+        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)) + 180);
+        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
+        return -1;
     }
 
     private void showProfileDialog()

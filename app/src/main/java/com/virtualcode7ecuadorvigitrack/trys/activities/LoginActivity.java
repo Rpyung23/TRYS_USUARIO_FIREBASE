@@ -97,8 +97,6 @@ public class LoginActivity extends AppCompatActivity
         mTextInputEditTextEmail = findViewById(R.id.id_textinput_mail);
         mTextInputEditTextPass = findViewById(R.id.id_textinput_password);
 
-
-
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
         {
             if (checkPermission())
@@ -202,7 +200,6 @@ public class LoginActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(LoginResult loginResult)
                     {
-
                         Log.e("LoginResult",loginResult.toString());
                     }
 

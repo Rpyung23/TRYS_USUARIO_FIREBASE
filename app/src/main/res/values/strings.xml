@@ -19,4 +19,6 @@
     <string name="hint_enter_a_message">Escriba su mensaje</string>
     <string name="instance_firebase_storage">gs://trys-19c9e.appspot.com</string>
     <string name="facebook_app_id">927690041053780</string>
+    <string name="fb_login_protocol_scheme">fb[927690041053780]</string>
+
 </resources>
