@@ -58,6 +58,7 @@ import com.virtualcode7ecuadorvigitrack.trys.provider.cBookingDriver;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cDriverProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderBusy;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderSharedUiCondutor;
 import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTazosBooking;
 import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTrazos;
 
@@ -108,6 +109,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     private ValueEventListener mValueEventListener;
 
     private ChildEventListener mChildEventListenerBooking;
+    private cProviderSharedUiCondutor mProviderSharedUiConductor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -122,7 +124,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
         latitud_end = getIntent().getDoubleExtra("latitud_end",0);
         longitud_end = getIntent().getDoubleExtra("longitud_end",0);
         price = getIntent().getDoubleExtra("price",0);
-
+        mProviderSharedUiConductor = new cProviderSharedUiCondutor(BookingActivity.this);
 
         new cToolbar().showToolbar(BookingActivity.this,"ESPERANDO TAXI"
                 ,false);
@@ -431,10 +433,12 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     protected void onPostResume() {
         mSupportMapFragment.getMapAsync(this);
         mChildEventListenerBooking = mBookingDriver.getmDatabaseReference()
+                .child(mProviderSharedUiConductor.leerSharedPreferences())
                 .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
             {
+
             }
 
             @Override
@@ -447,7 +451,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
             public void onChildRemoved(@NonNull DataSnapshot snapshot)
             {
                 Log.e("KEYCHANGE",snapshot.getKey().toString());
-                if (snapshot.getKey().equals(id_driver) )
+                if (snapshot.getKey().equals(mProviderSharedUiConductor.leerSharedPreferences()) )
                 {
                     if (snapshot.child("status").getValue().toString().equals("cancel"))
                     {
@@ -458,7 +462,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                                 , Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        intent.putExtra("id_driver",id_driver);
+                        intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
                         startActivity(intent);
                         finish();
 
@@ -472,7 +476,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                                     , Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.putExtra("id_driver",id_driver);
+                            intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
                             startActivity(intent);
                             finish();
 

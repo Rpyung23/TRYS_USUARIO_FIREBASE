@@ -29,6 +29,7 @@ import com.virtualcode7ecuadorvigitrack.trys.R;
 import com.virtualcode7ecuadorvigitrack.trys.models.cSolicitudTaxi;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cBookingDriver;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cGeoFire;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderSharedUiCondutor;
 import com.virtualcode7ecuadorvigitrack.trys.volley.cVolleyNotification;
 
 import java.util.EventListener;
@@ -311,6 +312,10 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                         /** Driver Acepto **/
                         Intent intent = new Intent(SoliciteTaxiActivity.this
                                 ,BookingActivity.class);
+                        cProviderSharedUiCondutor mProviderSharedUiCondutor =
+                                new cProviderSharedUiCondutor(SoliciteTaxiActivity.this);
+                        mProviderSharedUiCondutor.writeSharedPreferences(key);
+
                         intent.putExtra("id_driver",key);
                         intent.putExtra("price",solicitudTaxi.getPrice());
                         intent.putExtra("latitud_start",solicitudTaxi.getLatitud_start());
