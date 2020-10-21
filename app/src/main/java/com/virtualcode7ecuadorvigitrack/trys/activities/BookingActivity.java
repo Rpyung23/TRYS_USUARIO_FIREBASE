@@ -433,8 +433,8 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onPostResume() {
         mSupportMapFragment.getMapAsync(this);
-        Toasty.error(BookingActivity.this,mProviderSharedUiConductor.leerSharedPreferences(),
-                Toasty.LENGTH_LONG).show();
+        /*Toasty.error(BookingActivity.this,mProviderSharedUiConductor.leerSharedPreferences(),
+                Toasty.LENGTH_LONG).show();*/
         mChildEventListenerBooking = mBookingDriver.getmDatabaseReference()
                 .child(mProviderSharedUiConductor.leerSharedPreferences())
                 .addChildEventListener(new ChildEventListener() {
