@@ -257,7 +257,8 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
     private void readBookingDriver(final String key,final cSolicitudTaxi Os)
     {
-        mChildEventListener = mBookingDriver.getmDatabaseReference().addChildEventListener(new ChildEventListener() {
+        mChildEventListener = mBookingDriver.getmDatabaseReference()
+                .addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
             {
@@ -306,6 +307,11 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                 if (snapshot.exists())
                 {
                     mDatabaseReference.removeEventListener(mChildEventListener);/** Elimino los eventos de exuchas de nodos**/
+                    if (mValueEventListener!=null)
+                    {
+                        mBookingDriver.getmDatabaseReference().child(key)
+                                .removeEventListener(mValueEventListener);
+                    }
 
                     if (snapshot.child("status").getValue().toString().equals("create"))
                     {
@@ -315,7 +321,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                         cProviderSharedUiCondutor mProviderSharedUiCondutor =
                                 new cProviderSharedUiCondutor(SoliciteTaxiActivity.this);
                         mProviderSharedUiCondutor.writeSharedPreferences(key);
-
+                        finish();
                         intent.putExtra("id_driver",key);
                         intent.putExtra("price",solicitudTaxi.getPrice());
                         intent.putExtra("latitud_start",solicitudTaxi.getLatitud_start());
@@ -324,27 +330,31 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                         intent.putExtra("longitud_end",solicitudTaxi.getLongitud_end());
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        finish();
+
                     }else if(snapshot.child("status").getValue().toString().equals("cancel"))
                     {
-                        Toast.makeText(SoliciteTaxiActivity.this, "NO DRIVER"
+                        /*Toast.makeText(SoliciteTaxiActivity.this, "NO DRIVER"
                                 ,Toast.LENGTH_SHORT).show();
                         /** Driver NO Acepto **/
+                        finish();
+                        Intent intent_ = new Intent(SoliciteTaxiActivity.this
+                                ,InicioActivity.class);
+                        intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent_);
+                    }/*else if(snapshot.child("status").getValue().toString().equals("finalize"))
+                    {
                         Intent intent_ = new Intent(SoliciteTaxiActivity.this
                                 ,InicioActivity.class);
                         intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent_);
                         finish();
-                    }
-                }else
-                {
-                    Toast.makeText(SoliciteTaxiActivity.this, "AUN NO EXIST OK DRIVER"
-                            , Toast.LENGTH_SHORT).show();
+                    }*/
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error)
+            {
 
             }
         });
@@ -372,7 +382,9 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             mHandler.removeCallbacks(mRunnable);
         }
 
-        if (mValueEventListener!=null){mBookingDriver.getmDatabaseReference()
+        if (mValueEventListener!=null)
+        {
+            mBookingDriver.getmDatabaseReference()
                 .removeEventListener(mValueEventListener);}
         //mGeoQuery.removeGeoQueryEventListener();
         cont = 30;

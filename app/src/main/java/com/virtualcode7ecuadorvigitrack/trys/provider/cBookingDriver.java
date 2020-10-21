@@ -15,7 +15,7 @@ public class cBookingDriver
     public cBookingDriver()
     {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference("Booking");
+        mDatabaseReference = mFirebaseDatabase.getReference("Booking/");
     }
 
     public DatabaseReference readBookingDriver(String id_driver)

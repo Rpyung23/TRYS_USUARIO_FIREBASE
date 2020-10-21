@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class BookingActivity extends AppCompatActivity implements OnMapReadyCallback
 {
@@ -432,71 +433,74 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onPostResume() {
         mSupportMapFragment.getMapAsync(this);
+        Toasty.error(BookingActivity.this,mProviderSharedUiConductor.leerSharedPreferences(),
+                Toasty.LENGTH_LONG).show();
         mChildEventListenerBooking = mBookingDriver.getmDatabaseReference()
                 .child(mProviderSharedUiConductor.leerSharedPreferences())
                 .addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
-            {
-
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
-            {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot)
-            {
-                Log.e("KEYCHANGE",snapshot.getKey().toString());
-                if (snapshot.getKey().equals(mProviderSharedUiConductor.leerSharedPreferences()) )
-                {
-                    if (snapshot.child("status").getValue().toString().equals("cancel"))
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
                     {
-                        /**CARRERA CANCELADA**/
-                        Log.e("KEYCHANGE","CANCELADA");
 
-                        Toast.makeText(BookingActivity.this, "SU CARRERA HA SIDO CANCELADA "
-                                , Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+                    {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot)
+                    {
+                        Log.e("KEYCHANGE",snapshot.getKey().toString());
                         Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
                         startActivity(intent);
                         finish();
+                        /*if (snapshot.child("status").getValue().toString().equals("cancel"))
+                            {
+                                /**CARRERA CANCELADA**/
+                               /* Log.e("KEYCHANGE","CANCELADA");
 
-                    }else if (snapshot.child("status").getValue().toString().equals("finalize"))
-                        {
-                            /** CARRERA FINALIZADA**/
+                                Toast.makeText(BookingActivity.this, "SU CARRERA HA SIDO CANCELADA "
+                                        , Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
+                                startActivity(intent);
+                                finish();
 
-                            Log.e("KEYCHANGE","FINALIZADA");
+                            }*//*else
+                            {
+                                /** CARRERA FINALIZADA**/
 
-                            Toast.makeText(BookingActivity.this, "CARRERA FINALIZADA EXITOSAMENTE"
-                                    , Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
-                            startActivity(intent);
-                            finish();
+                                /*Log.e("KEYCHANGE","FINALIZADA");
 
-                        }
-                }
-                //Log.e("KEYCHANGE",snapshot.child("status").getValue().toString());
-                //finish();
-            }
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
-            {
+                                Toast.makeText(BookingActivity.this, "CARRERA FINALIZADA EXITOSAMENTE"
+                                        , Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
+                                startActivity(intent);
+                                finish();
+                            }*/
+                        //Log.e("KEYCHANGE",snapshot.child("status").getValue().toString());
+                        //finish();
+                    }
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+                    {
 
-            }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error)
-            {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
 
-            }
-        });
+                    }
+                });
         super.onPostResume();
     }
 
@@ -509,7 +513,41 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     @Override
+    protected void onStart()
+    {
+
+        mBookingDriver.getmDatabaseReference()
+                .child(mProviderSharedUiConductor.leerSharedPreferences())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                if (!snapshot.exists())
+                {
+                    Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        super.onStart();
+    }
+
+    @Override
     public void onBackPressed() {
         return;
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
     }
 }
