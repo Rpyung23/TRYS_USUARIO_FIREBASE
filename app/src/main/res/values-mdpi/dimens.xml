@@ -12,5 +12,6 @@
     <dimen name="margenes_card_alert_confrimar_cancelar_carrera">7dp</dimen>
     <dimen name="text_size_inicio_destino_alter_detalle">20sp</dimen>
     <dimen name="text_size_taxi_cercano">45sp</dimen>
+    <dimen name="text_size_title_cod_verifi">25sp</dimen>
 
 </resources>

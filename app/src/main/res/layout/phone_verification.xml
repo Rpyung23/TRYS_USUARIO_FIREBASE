@@ -12,7 +12,7 @@
             android:textColor="@color/colorSecondaryText"
             android:background="@color/colorPrimaryLight"
             android:textStyle="bold"
-            android:textSize="25sp"
+            android:textSize="@dimen/text_size_title_cod_verifi"
             android:gravity="center"
             android:text="CODIGO DE VERIFICACION"
             android:layout_width="match_parent"

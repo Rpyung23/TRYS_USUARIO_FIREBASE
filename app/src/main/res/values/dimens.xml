@@ -35,5 +35,6 @@
 
     <dimen name="circle_View_alto_ancho_rating_driver">200dp</dimen>
     <dimen name="textsize_enviar_calificaiton_driver">25sp</dimen>
+    <dimen name="text_size_title_cod_verifi">25sp</dimen>
 
 </resources>

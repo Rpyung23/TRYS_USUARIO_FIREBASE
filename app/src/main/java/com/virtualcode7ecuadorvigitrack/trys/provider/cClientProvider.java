@@ -1,5 +1,7 @@
 package com.virtualcode7ecuadorvigitrack.trys.provider;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -58,4 +60,6 @@ public class cClientProvider
 
         return hashMap;
     }
+
+
 }

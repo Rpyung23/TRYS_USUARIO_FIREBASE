@@ -91,6 +91,46 @@
 
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/id_card_register_google"
+            android:layout_marginTop="10dp"
+            app:cardElevation="20dp"
+            app:cardCornerRadius="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@drawable/border_botton_register_facebook"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/googleg_standard_color_18"
+                    android:scaleType="centerCrop"
+                    >
+                </androidx.appcompat.widget.AppCompatImageView>
+                <TextView
+                    android:layout_marginLeft="11dp"
+                    android:textStyle="bold"
+                    android:textSize="25dp"
+                    android:text="Google"
+                    android:textColor="@color/colorPrimaryLight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    >
+                </TextView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.cardview.widget.CardView>
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

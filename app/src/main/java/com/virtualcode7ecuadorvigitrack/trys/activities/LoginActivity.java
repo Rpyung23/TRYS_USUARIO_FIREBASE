@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,15 +26,36 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.internal.RegisterListenerMethod;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.GoogleAuthCredential;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.virtualcode7ecuadorvigitrack.trys.R;
+import com.virtualcode7ecuadorvigitrack.trys.models.cUser;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cClientProvider;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderClientRating;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderToken;
 
 import java.lang.reflect.Array;
@@ -46,9 +68,12 @@ import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity
 {
+    private static final int RC_SIGN_IN = 25689;
     private Button mButtonRegister;
 
     private Button mButtonLogin;
+
+    private CircleImageView mCircleImageViewGoogle;
 
     private TextInputEditText mTextInputEditTextEmail;
     private TextInputEditText mTextInputEditTextPass;
@@ -67,8 +92,13 @@ public class LoginActivity extends AppCompatActivity
 
     /** FACEBOOK **/
     private CallbackManager mCallbackManager;
+    /** Google **/
 
+    private GoogleSignInOptions mGoogleSignInOptions;
+    private GoogleSignInClient mGoogleSignInClient;
+    private boolean banCreateUser = false;
 
+    private android.app.AlertDialog mAlertDialogAccediendoFragmentLogin;
 
 
     @Override
@@ -89,6 +119,16 @@ public class LoginActivity extends AppCompatActivity
         Log.e("WP",""+metrics.widthPixels);
         Log.e("RV",Build.getRadioVersion());
 
+
+
+        mGoogleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .requestProfile()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(LoginActivity.this,mGoogleSignInOptions);
+
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
         mCallbackManager = CallbackManager.Factory.create();
 
@@ -96,6 +136,7 @@ public class LoginActivity extends AppCompatActivity
         mButtonLogin = findViewById(R.id.id_login_client);
         mTextInputEditTextEmail = findViewById(R.id.id_textinput_mail);
         mTextInputEditTextPass = findViewById(R.id.id_textinput_password);
+        mCircleImageViewGoogle = findViewById(R.id.id_circle_view_gmail);
 
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M)
         {
@@ -171,11 +212,14 @@ public class LoginActivity extends AppCompatActivity
             {
                 CardView mCardFacebook;
                 CardView mCardEmail;
+                CardView mCardGoogle;
                 View view1 = LayoutInflater.from(LoginActivity.this).inflate(R.layout.alert_tipos_register,null);
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginActivity.this);
                 mBuilder.setView(view1);
                 mCardFacebook = view1.findViewById(R.id.id_card_register_facebook);
                 mCardEmail = view1.findViewById(R.id.id_card_register_email);
+                mCardGoogle = view1.findViewById(R.id.id_card_register_google);
+
                 mAlertDialogOPCRegister = mBuilder.create();
                 mAlertDialogOPCRegister.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
@@ -195,6 +239,14 @@ public class LoginActivity extends AppCompatActivity
                     {
                         mAlertDialogOPCRegister.dismiss();
                         openActivityRegisterClient();
+                    }
+                });
+                mCardGoogle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        banCreateUser = true;
+                        signInGoogle();
                     }
                 });
                 mAlertDialogOPCRegister.show();
@@ -224,9 +276,36 @@ public class LoginActivity extends AppCompatActivity
                     }
                 });
 
-
+        mCircleImageViewGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                /**Login Google**/
+                banCreateUser = false;
+                signInGoogle();
+            }
+        });
 
     }
+
+    private void signInGoogle() {
+        // Launches the sign in flow, the result is returned in onActivityResult
+
+        showAlerDialogFragmentLogin();
+
+        Intent intent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(intent, RC_SIGN_IN);
+    }
+
+    private void showAlerDialogFragmentLogin()
+    {
+        SpotsDialog.Builder mBuilder = new SpotsDialog.Builder();
+        mBuilder.setContext(LoginActivity.this)
+                .setMessage("Accediendo");
+        mAlertDialogAccediendoFragmentLogin = mBuilder.build();
+        mAlertDialogAccediendoFragmentLogin.show();
+    }
+
 
     private void showrequestPermissions()
     {
@@ -297,10 +376,156 @@ public class LoginActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        //mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode)
+        {
+            case RC_SIGN_IN:
+                hideProgreesFragment();
+                showProgressLogin();
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                task.addOnCompleteListener(new OnCompleteListener<GoogleSignInAccount>() {
+                    @Override
+                    public void onComplete(@NonNull Task<GoogleSignInAccount> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            /** TODO BN **/
+                            GoogleSignInAccount googleSignInAccount = task.getResult();
+                            Log.i("Google","ID : "+googleSignInAccount.getId());
+                            Log.i("Google","TOKEN : "+googleSignInAccount.getIdToken());
+                            Log.i("Google",googleSignInAccount.getEmail());
+                            Log.i("Google",googleSignInAccount.getDisplayName());
+                            Log.i("Google","SIN CELULAR");
+                            Log.i("Google", String.valueOf(googleSignInAccount.getPhotoUrl()));
+
+                            firebaseAutRegisterhWithGoogle(googleSignInAccount);
+
+                        }else
+                            {
+                                Toasty.error(LoginActivity.this,task.getException().getMessage(),Toasty.LENGTH_LONG)
+                                        .show();
+                                hideProgreesLogin();
+                            }
+                    }
+                });
+                task.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e)
+                    {
+                        Toasty.error(LoginActivity.this,e.getMessage(),Toasty.LENGTH_LONG).show();
+                        hideProgreesLogin();
+                    }
+                });
+                break;
+        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void firebaseAutRegisterhWithGoogle(final GoogleSignInAccount googleSignInAccount)
+    {
+        AuthCredential mAuthCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(),null);
+
+        mFirebaseProviderAuth.getmFirebaseAuth().signInWithCredential(mAuthCredential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull final Task<AuthResult> task)
+            {
+                if (task.isSuccessful())
+                {
+                    /**  Activity Inicio **/
+                    if (banCreateUser)
+                    {
+                        registerUserRealTime(googleSignInAccount,task.getResult().getUser().getUid());
+                    }else
+                        {
+                            cClientProvider oCP = new cClientProvider();
+                            oCP.getmDatabaseReference().child(task.getResult().getUser().getUid())
+                                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot)
+                                {
+                                    if (snapshot.exists())
+                                    {
+                                        abrirActivityInicio();
+                                    }else
+                                        {
+                                            registerUserRealTime(googleSignInAccount,task.getResult().getUser().getUid());
+                                        }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                }else
+                    {
+                        Toasty.error(LoginActivity.this,task.getException().getMessage(),
+                                Toasty.LENGTH_LONG).show();
+                        hideProgreesLogin();
+                    }
+            }
+        });
+    }
+
+    private void registerUserRealTime(GoogleSignInAccount googleSignInAccount, final String uid)
+    {
+        cClientProvider mClientProvider = new cClientProvider();
+        final cUser oU = new cUser();
+        oU.setEmail(googleSignInAccount.getEmail());
+        oU.setId_token_(uid);
+        oU.setName(googleSignInAccount.getDisplayName());
+        oU.setPhone("1234567890");
+        oU.setPhoto_url(googleSignInAccount.getPhotoUrl().toString());
+        mClientProvider.createNewClient(oU).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task)
+            {
+                if (task.isSuccessful())
+                {
+                    /**REgister el Rating**/
+                    registerRating(oU.getId_token_());
+                    abrirActivityInicio();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Toasty.error(LoginActivity.this,"No se pudo completar el registro Google",Toasty.LENGTH_LONG).show();
+                hideProgreesLogin();
+            }
+        });
+    }
+
+    private void registerRating(String id_token_)
+    {
+        new cFirebaseProviderClientRating().createClientRating(id_token_,5)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        if (task.isSuccessful())
+                        {
+                            abrirActivityInicio();
+                        }else
+                            {
+                                Toasty
+                                        .info(LoginActivity.this,"No se pudo completar el registro",
+                                                Toasty.LENGTH_LONG).show();
+                            }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e)
+            {
+                Toasty.error(LoginActivity.this,e.getMessage().toString(),Toasty.LENGTH_LONG)
+                        .show();
+            }
+        });
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions
@@ -341,14 +566,32 @@ public class LoginActivity extends AppCompatActivity
     }
     public void  hideProgreesLogin()
     {
-        mAlertDialogLogin.cancel();
-        mAlertDialogLogin.dismiss();
+        if (mAlertDialogLogin!=null)
+        {
+            mAlertDialogLogin.cancel();
+            mAlertDialogLogin.dismiss();
+        }
     }
     @Override
     protected void onDestroy()
     {
         if (mAlertDialogLogin!=null){hideProgreesLogin();}
+        if (mAlertDialogOPCRegister!=null)
+        {
+            mAlertDialogOPCRegister.cancel();
+            mAlertDialogOPCRegister.hide();
+        }
+        hideProgreesFragment();
         super.onDestroy();
+    }
+
+    private void hideProgreesFragment()
+    {
+        if (mAlertDialogAccediendoFragmentLogin!=null)
+        {
+            mAlertDialogAccediendoFragmentLogin.cancel();
+            mAlertDialogAccediendoFragmentLogin.hide();
+        }
     }
 
     @Override
@@ -356,4 +599,5 @@ public class LoginActivity extends AppCompatActivity
     {
         return;
     }
+
 }

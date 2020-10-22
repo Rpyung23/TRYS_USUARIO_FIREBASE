@@ -32,6 +32,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInApi;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -49,6 +58,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
@@ -57,6 +68,7 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -227,12 +239,34 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                         startActivity(intent);
                         break;
                     case R.id.id_singOut:
-                        if (mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser()!=null)
+
+                        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(InicioActivity.this);
+                        if (account!=null)
                         {
-                            mFirebaseProviderAuth.getmFirebaseAuth().signOut();
-                            openActivityLogin();
-                            finish();
-                        }
+                            /**cerrar session google **/
+                            GoogleSignInOptions opts = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestEmail()
+                                    .build();
+
+                            GoogleSignInClient mGoogleSignInClient =  GoogleSignIn.getClient(InicioActivity.this, opts);
+                            mGoogleSignInClient.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task)
+                                {
+                                    if (task.isSuccessful())
+                                    {
+                                        singOut();
+                                    }else
+                                        {
+                                            Toasty.error(InicioActivity.this,task.getException().getMessage(),Toasty.LENGTH_LONG).show();
+                                        }
+                                }
+                            });
+                        }else
+                            {
+                                singOut();
+                            }
+
                         break;
                     case R.id.id_perfil:
                         Intent intent1 = new Intent(InicioActivity.this,ProfileActivity.class);
@@ -286,6 +320,17 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                     }
             }
         });
+    }
+
+    private void singOut()
+    {
+        if (mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser()!=null)
+        {
+            mFirebaseProviderAuth.getmFirebaseAuth().signOut();
+            openActivityLogin();
+            /**Verificar GoogleApi y cerrar **/
+            finish();
+        }
     }
 
     private void createAlertDialogInformacion()
