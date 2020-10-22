@@ -128,6 +128,9 @@ public class LoginActivity extends AppCompatActivity
                     String email_part = mTextInputEditTextEmail.getText().toString();
                     if (!email_part.contains("@vigitrack.com"))
                     {
+                        /*Toasty.error(LoginActivity.this,mTextInputEditTextPass.getText().toString(),Toasty.LENGTH_LONG).show();*/
+                        showProgressLogin();
+
                         mFirebaseProviderAuth.loginUp(mTextInputEditTextEmail.getText().toString()
                                 ,mTextInputEditTextPass.getText().toString())
                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>()
@@ -140,8 +143,9 @@ public class LoginActivity extends AppCompatActivity
                                             abrirActivityInicio();
                                         }else
                                         {
-                                            Toast.makeText(LoginActivity.this, "Datos no validos !!!"
+                                            Toast.makeText(LoginActivity.this, task.toString()
                                                     , Toast.LENGTH_SHORT).show();
+                                            hideProgreesLogin();
                                         }
                                     }
                                 });
@@ -149,11 +153,13 @@ public class LoginActivity extends AppCompatActivity
                         {
                             Toasty.info(LoginActivity.this,"EMAIL NO CORRESPONDE !!",
                                     Toasty.LENGTH_LONG).show();
+                            hideProgreesLogin();
                         }
                 }else
                 {
                     Toast.makeText(LoginActivity.this, "Existen Datos vacios!!"
                             , Toast.LENGTH_SHORT).show();
+                    hideProgreesLogin();
                 }
             }
         });
@@ -258,7 +264,6 @@ public class LoginActivity extends AppCompatActivity
     private void abrirActivityInicio()
     {
         updatetokenPhone();
-        showProgressLogin();
         Intent intent = new Intent(LoginActivity.this, InicioActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
