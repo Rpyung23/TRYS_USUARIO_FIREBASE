@@ -1,53 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="bottom"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:gravity="center"
-        android:orientation="horizontal"
+    android:layout_height="@dimen/alto_card_input_chats"
+    android:backgroundTint="@android:color/white"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="2dp"
+    android:layout_margin="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize">
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        >
 
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/id_camera_chats"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:backgroundTint="@color/colorPrimaryDark"
-            app:srcCompat="@drawable/gallery_camera"
-            app:tint="@color/colorSecondaryText"
-            app:backgroundTint="@color/colorSecondaryText"
-            android:foregroundTint="@color/colorSecondaryText"
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_centerVertical="true"
+            android:id="@+id/id_camera_galery_chats"
+            android:layout_marginLeft="10dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_img_chat"
+            android:layout_alignParentLeft="true"
+            android:elevation="0dp"
             >
-        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        </androidx.appcompat.widget.AppCompatImageButton>
 
-
-        <EditText
-            android:id="@+id/id_edittext_chats"
-            android:padding="7dp"
-            android:layout_margin="5dp"
-            android:hint="@string/hint_enter_a_message"
-            android:textSize="19sp"
-            android:maxLines="4"
-            android:background="@drawable/round_chat"
-            android:layout_weight="0.5"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </EditText>
-
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_centerVertical="true"
             android:id="@+id/id_botton_send_chats"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"
-            android:layout_marginRight="3dp"
-            android:background="@drawable/send"
-            android:layout_weight="0.25"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_send_chat"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="10dp"
+            android:elevation="0dp"
             >
-        </androidx.appcompat.widget.AppCompatButton>
+        </androidx.appcompat.widget.AppCompatImageButton>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/id_edittext_chats"
+            android:paddingLeft="@dimen/margin_left_edittext_chat"
+            android:layout_centerVertical="true"
+            android:hint="@string/hint_enter_a_message"
+            android:textColorHint="#66000000"
+            android:layout_width="@dimen/ancho_edittext_chats"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_centerInParent="true"
+            android:scrollbars="vertical"
+            >
+        </androidx.appcompat.widget.AppCompatEditText>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -75,7 +75,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     private Toolbar toolbar;
     private SupportMapFragment mSupportMapFragment;
 
-    private String id_driver;
+
     private double latitud_start;
     private double longitud_start;
     private double latitud_end;
@@ -111,6 +111,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
 
     private ChildEventListener mChildEventListenerBooking;
     private cProviderSharedUiCondutor mProviderSharedUiConductor;
+    private cProviderSharedUiCondutor mProviderSharedUiCondutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -118,7 +119,9 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
 
-        id_driver = getIntent().getStringExtra("id_driver");
+        mProviderSharedUiCondutor = new cProviderSharedUiCondutor(BookingActivity.this);
+
+
 
         latitud_start = getIntent().getDoubleExtra("latitud_start", 0);
         longitud_start = getIntent().getDoubleExtra("longitud_start",0);
@@ -174,7 +177,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        mBookingDriver.updateBookingDriver(id_driver,"cancel")
+                        mBookingDriver.updateBookingDriver(mProviderSharedUiCondutor.leerSharedPreferences(),"cancel")
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task)
@@ -219,7 +222,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
             public void onClick(View view)
             {
 
-                mDriverProvider.readDriver(id_driver)
+                mDriverProvider.readDriver(mProviderSharedUiCondutor.leerSharedPreferences())
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot)
@@ -228,7 +231,11 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                                 {
 
                                     Intent intent = new Intent(BookingActivity.this,MessagingActivity.class);
-                                    intent.putExtra("id_driver",id_driver);
+                                    intent.putExtra("id_driver",mProviderSharedUiCondutor.leerSharedPreferences());
+                                    intent.putExtra("phone_driver",snapshot.child("Phone")
+                                            .getValue().toString());
+                                    intent.putExtra("name_driver",snapshot.child("Name")
+                                            .getValue().toString());
                                     intent.putExtra("photo_driver",snapshot.child("Photo")
                                             .getValue().toString());
                                     //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -293,7 +300,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void readDriver()
     {
-        mDriverProvider.readDriver(id_driver).addListenerForSingleValueEvent(new ValueEventListener()
+        mDriverProvider.readDriver(mProviderSharedUiCondutor.leerSharedPreferences()).addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
@@ -334,7 +341,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void rastreoBusyDriver()
     {
-        mValueEventListener = mFirebaseProviderBusy.readBusyDriving(id_driver)
+        mValueEventListener = mFirebaseProviderBusy.readBusyDriving(mProviderSharedUiCondutor.leerSharedPreferences())
                 .addValueEventListener(new ValueEventListener()
         {
             @Override

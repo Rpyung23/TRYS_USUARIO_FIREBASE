@@ -2,21 +2,28 @@ package com.virtualcode7ecuadorvigitrack.trys.models;
 
 public class cMessaging
 {
+    private String uid_msm;
     private int tipo_right_left;
     private String id_reciver_send;
     private String messaging;
     private String url_perfil_driver;
 
-    private String url_perfil_client;
-
-
 
     private String type_msm;
+
+    private String url_perfil_client;
 
 
     public cMessaging() {
     }
 
+    public String getUid_msm() {
+        return uid_msm;
+    }
+
+    public void setUid_msm(String uid_msm) {
+        this.uid_msm = uid_msm;
+    }
 
     public String getType_msm() {
         return type_msm;
@@ -65,4 +72,5 @@ public class cMessaging
 
     public void setMessaging(String messaging) {
         this.messaging = messaging;
-    }}
+    }
+}

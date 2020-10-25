@@ -8,4 +8,8 @@
     <dimen name="marginTop_circle_view_login">170dp</dimen>
     <dimen name="circle_View_alto_ancho_rating_driver">220dp</dimen>
     <dimen name="text_size_title_cod_verifi">25sp</dimen>
+    <dimen name="alto_img_profile_chat">50dp</dimen>
+    <dimen name="alto_card_input_chats">50dp</dimen>
+    <dimen name="ancho_edittext_chats">287dp</dimen>
+    <dimen name="margin_left_edittext_chat">13dp</dimen>
 </resources>

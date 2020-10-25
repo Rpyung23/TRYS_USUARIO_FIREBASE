@@ -13,4 +13,8 @@
     <dimen name="circle_View_alto_ancho_rating_driver">150dp</dimen>
     <dimen name="textsize_enviar_calificaiton_driver">20sp</dimen>
     <dimen name="text_size_title_cod_verifi">20sp</dimen>
+    <dimen name="alto_img_profile_chat">50dp</dimen>
+    <dimen name="alto_card_input_chats">50dp</dimen>
+    <dimen name="ancho_edittext_chats">240dp</dimen>
+    <dimen name="margin_left_edittext_chat">7dp</dimen>
 </resources>

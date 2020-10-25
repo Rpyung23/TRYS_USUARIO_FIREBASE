@@ -73,6 +73,8 @@ public class SoliciteTaxiActivity extends AppCompatActivity
     private DatabaseReference mDatabaseReference;
 
 
+    private cProviderSharedUiCondutor mProviderSharedUiCondutor;
+
     private TextView mTextViewCount;
 
     private Handler mHandler;
@@ -137,6 +139,8 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
         mBookingDriver = new cBookingDriver();
         OSolicitudTaxi = new cSolicitudTaxi();
+        mProviderSharedUiCondutor= new cProviderSharedUiCondutor(SoliciteTaxiActivity.this);
+
         mDatabaseReference = FirebaseDatabase.getInstance().getReference("Token");
 
         OvolleyNotification = new cVolleyNotification(SoliciteTaxiActivity.this);
@@ -178,6 +182,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                 {
                     isdriver=true;
                     Log.e("NOTI","ENVIANDO");
+                    mProviderSharedUiCondutor.writeSharedPreferences(key);
                     readTokenDriver(key);
                 }
             }

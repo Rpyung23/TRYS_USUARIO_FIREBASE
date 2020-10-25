@@ -77,7 +77,7 @@ public class adapterChats extends RecyclerView.Adapter<adapterChats.cViewHolderC
     public void onBindViewHolder(@NonNull cViewHolderChats holder, int position)
     {
         /****/
-
+/*
         if (mMessagingArrayList.get(position).getId_reciver_send()
                 .equals(mFirebaseProviderAuth.getmFirebaseAuth().getUid()))
         {
@@ -93,7 +93,7 @@ public class adapterChats extends RecyclerView.Adapter<adapterChats.cViewHolderC
                     .error(R.drawable.error_image_load)
                     .placeholder(R.drawable.loading_photo)
                     .into(holder.mCircleImageView);
-        }
+        }*/
 
 
         if (mMessagingArrayList.get(position).getType_msm().equals("text"))
@@ -148,7 +148,7 @@ public class adapterChats extends RecyclerView.Adapter<adapterChats.cViewHolderC
             super(itemView);
 
             imageView_photo = itemView.findViewById(R.id.image_id_msm_chat_);
-            mCircleImageView = itemView.findViewById(R.id.id_circle_profile_chats);
+            //mCircleImageView = itemView.findViewById(R.id.id_circle_profile_chats);
             mTextViewMessaing = itemView.findViewById(R.id.textview_id_msm_chat);
         }
 

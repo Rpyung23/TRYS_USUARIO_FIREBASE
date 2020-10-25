@@ -1,31 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:orientation="vertical"
+    android:fitsSystemWindows="true"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@android:color/white"
     tools:context=".activities.MessagingActivity">
 
-    <include layout="@layout/appbar_toolbar">
-    </include>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/id_toolbar_chat"
+        android:background="@color/colorPrimaryLight"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:paddingRight="5dp"
+        android:theme="@style/Toolbar"
+        >
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/id_circle_profile_toolbar"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="2dp"
+                android:layout_width="@dimen/alto_img_profile_chat"
+                android:src="@drawable/error_image_load"
+                android:layout_height="@dimen/alto_img_profile_chat">
+            </de.hdodenhof.circleimageview.CircleImageView>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="5dp"
+                >
+                <TextView
+                    android:id="@+id/id_textview_name_client"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:text="JUAN FLORES"
+                    >
+                </TextView>
+                <TextView
+                    android:id="@+id/id_textview_name_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AAA-969"
+                    android:textSize="12dp"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    >
+                </TextView>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/id_recyclerview_chats"
-        android:background="#E6E6E6"
-        android:layout_marginTop="?actionBarSize"
+        android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?actionBarSize"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_marginBottom="60dp"
+        tools:listitem="@layout/chat_msm_right"
         >
     </androidx.recyclerview.widget.RecyclerView>
+
     <include
-        android:layout_gravity="bottom"
         layout="@layout/panel_writer_msm_chat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         >
     </include>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
