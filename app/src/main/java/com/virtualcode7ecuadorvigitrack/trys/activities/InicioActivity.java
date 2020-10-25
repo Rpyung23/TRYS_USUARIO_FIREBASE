@@ -83,6 +83,7 @@ import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderWorking;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cGeoFire;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderCalendar;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderSharedUiCondutor;
 import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTrazos;
 
 import java.io.IOException;
@@ -682,7 +683,9 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     private void verificarBooking()
     {
         FirebaseDatabase mFirebaseDatabaseV = FirebaseDatabase.getInstance();
-        DatabaseReference mDatabaseReferenceV = mFirebaseDatabaseV.getReference("Booking");
+        DatabaseReference mDatabaseReferenceV = mFirebaseDatabaseV
+                .getReference("Booking").child(new cProviderSharedUiCondutor(InicioActivity.this)
+                        .leerSharedPreferences());
         mDatabaseReferenceV.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
@@ -693,7 +696,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                     for (DataSnapshot snapshot1 : snapshot.getChildren())
                     {
                         String key = snapshot1.child("id_client").getValue().toString();
-                        if (key.equals(mFirebaseProviderAuth.getmFirebaseAuth().getUid()) &&
+                        if (key.equals(mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser()
+                                .getUid()) &&
                                 snapshot1.child("status").getValue().toString().equals("create"))
                         {
                             Intent intent_ = new Intent(InicioActivity.this
