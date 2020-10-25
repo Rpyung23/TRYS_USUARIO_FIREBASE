@@ -56,6 +56,7 @@ import com.virtualcode7ecuadorvigitrack.trys.includes.cToolbar;
 import com.virtualcode7ecuadorvigitrack.trys.models.cUser;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cBookingDriver;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cDriverProvider;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseMessaging;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderAuth;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cFirebaseProviderBusy;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderSharedUiCondutor;
@@ -184,6 +185,8 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                             {
                                 Toast.makeText(BookingActivity.this, "CARRERA CANCELADA"
                                         , Toast.LENGTH_SHORT).show();
+                                new cFirebaseMessaging().deleteMessaging(mProviderSharedUiConductor
+                                        .leerSharedPreferences());
                                 Intent intent = new Intent(BookingActivity.this
                                         ,InicioActivity.class);
                                 startActivity(intent);
@@ -461,6 +464,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                     public void onChildRemoved(@NonNull DataSnapshot snapshot)
                     {
                         Log.e("KEYCHANGE",snapshot.getKey().toString());
+                        new cFirebaseMessaging().deleteMessaging(mProviderSharedUiConductor.leerSharedPreferences());
                         Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());

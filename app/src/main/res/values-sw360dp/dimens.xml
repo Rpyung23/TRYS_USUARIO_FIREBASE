@@ -17,4 +17,6 @@
     <dimen name="alto_card_input_chats">50dp</dimen>
     <dimen name="ancho_edittext_chats">240dp</dimen>
     <dimen name="margin_left_edittext_chat">7dp</dimen>
+    <dimen name="alto_acnho_circle_profile_edit">170dp</dimen>
+    <dimen name="textsize_save_profile">18sp</dimen>
 </resources>
