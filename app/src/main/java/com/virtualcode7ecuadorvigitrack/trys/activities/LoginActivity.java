@@ -46,6 +46,8 @@ import com.google.android.gms.tasks.TaskCompletionSource;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuthActionCodeException;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
@@ -189,7 +191,14 @@ public class LoginActivity extends AppCompatActivity
                                             hideProgreesLogin();
                                         }
                                     }
-                                });
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e)
+                            {
+                                Toasty.error(LoginActivity.this,e.getMessage(),
+                                        Toasty.LENGTH_LONG).show();
+                            }
+                        });
                     }else
                         {
                             Toasty.info(LoginActivity.this,"EMAIL NO CORRESPONDE !!",
@@ -198,8 +207,8 @@ public class LoginActivity extends AppCompatActivity
                         }
                 }else
                 {
-                    Toast.makeText(LoginActivity.this, "Existen Datos vacios!!"
-                            , Toast.LENGTH_SHORT).show();
+                    Toasty.info(LoginActivity.this,"EXISTEN DATOS VACIOS",
+                            Toasty.LENGTH_LONG).show();
                     hideProgreesLogin();
                 }
             }
