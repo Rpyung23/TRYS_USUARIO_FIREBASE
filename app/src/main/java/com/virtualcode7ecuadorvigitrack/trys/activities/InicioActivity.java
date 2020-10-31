@@ -32,6 +32,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -89,6 +91,7 @@ import com.virtualcode7ecuadorvigitrack.trys.runnable.cRunnableTrazos;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -126,6 +129,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private Marker markerIam;
 
+    private cGeoFire mGeoFireWorking;
+
     private Marker markerIamDestino;
 
     private Button mButtonGotoTaxi;
@@ -135,12 +140,15 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     private cRunnableTrazos mRunnableTrazos;
 
     private Marker mMarkerDriving;
+    private LatLng mLatLng;
 
     private AlertDialog alertDialog_showPreviewSolicitud;
 
     private ValueEventListener mValueEventListenerAllDriving;
 
     private cUser oUser = new cUser();
+    private List<Marker> markerListDriver = new ArrayList<>();
+    private boolean mFirsTime = true;
 
     LocationCallback mLocationCallback = new LocationCallback()
     {
@@ -155,6 +163,10 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                     {
                         markerIam.remove();
                     }
+
+
+
+                    mLatLng = new LatLng(location.getLatitude(),location.getLongitude());
 
                     markerIam = mGoogleMap.addMarker(new MarkerOptions().position(new
                             LatLng(location.getLatitude(),location.getLongitude()))
@@ -179,6 +191,13 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                         }
                     }
                     mFusedLocationProviderClient.removeLocationUpdates(this);
+
+                    if (mFirsTime)
+                    {
+                        readingGpsAllWorking();
+                        mFirsTime=false;
+                    }
+
                 }else
                     {
                         Toast.makeText(InicioActivity.this, "MAPVIEW NULL"
@@ -215,6 +234,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         mButtonGotoTaxi = findViewById(R.id.id_btn_gotoTaxi);
         viewHeaderMenu = navigationView.getHeaderView(0);
 
+        mGeoFireWorking = new cGeoFire();
 
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
 
@@ -508,7 +528,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         mLocationRequest.setSmallestDisplacement(0);
         mRunnableTrazos = new cRunnableTrazos(InicioActivity.this,mGoogleMap);
         startLocationClient();
-        readingGpsAllWorking();
+
     }
 
     private void startLocationClient()
@@ -643,7 +663,93 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void readingGpsAllWorking()
     {
-        mValueEventListenerAllDriving = mFirebaseProviderWorking.getmDatabaseReference().addValueEventListener(new ValueEventListener() {
+
+        mGeoFireWorking.getActiveDriver(mLatLng)
+                .addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location)
+            {
+                /**Añado los marker los nuevos**/
+                for (Marker marker : markerListDriver)
+                {
+                    if(marker.getTag() != null)
+                    {
+                        if (marker.getTag().equals(key))
+                        {
+                            return;
+                        }
+                    }
+                }
+
+                LatLng latLng = new LatLng(location.latitude,location.longitude);
+
+                Marker marker = mGoogleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo))
+                );
+                marker.setTag(key);
+                markerListDriver.add(marker);
+            }
+
+            @Override
+            public void onKeyExited(String key)
+            {
+                /**Elimar los marker q se desconectan**/
+
+                for (Marker marker : markerListDriver)
+                {
+                    if(marker.getTag() != null)
+                    {
+                        if (marker.getTag().equals(key))
+                        {
+                            marker.remove();
+                            markerListDriver.remove(marker);
+                            return;
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location)
+            {
+                /**Actualizar la posicion**/
+                for (Marker marker : markerListDriver)
+                {
+                    if(marker.getTag() != null)
+                    {
+                        if (marker.getTag().equals(key))
+                        {
+                            marker.setRotation(getBearing(marker.getPosition(),
+                                    new LatLng(location.latitude,
+                                    location.longitude)));
+
+                            marker.setPosition(new LatLng(location.latitude,
+                                    location.longitude));
+                        }
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
+
+
+
+        mValueEventListenerAllDriving = mFirebaseProviderWorking.getmDatabaseReference()
+                .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot)
             {
@@ -678,8 +784,25 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
             }
         });
-    }
 
+
+
+    }
+    private float getBearing(LatLng begin,LatLng end)
+    {
+        double lat = Math.abs(begin.latitude - end.latitude);
+        double lng = Math.abs(begin.longitude - end.longitude);
+
+        if (begin.latitude < end.latitude && begin.longitude < end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)));
+        else if (begin.latitude >= end.latitude && begin.longitude < end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 90);
+        else if (begin.latitude >= end.latitude && begin.longitude >= end.longitude)
+            return (float) (Math.toDegrees(Math.atan(lng / lat)) + 180);
+        else if (begin.latitude < end.latitude && begin.longitude >= end.longitude)
+            return (float) ((90 - Math.toDegrees(Math.atan(lng / lat))) + 270);
+        return -1;
+    }
     private void verificarBooking()
     {
         FirebaseDatabase mFirebaseDatabaseV = FirebaseDatabase.getInstance();

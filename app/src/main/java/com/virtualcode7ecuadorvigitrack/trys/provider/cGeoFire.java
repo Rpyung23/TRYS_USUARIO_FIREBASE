@@ -138,4 +138,13 @@ public class cGeoFire
            }
        });
     }
+
+
+    public GeoQuery getActiveDriver(LatLng mLatLng)
+    {
+        GeoQuery mgeo = mGeoFire.queryAtLocation(new GeoLocation(mLatLng.latitude,
+                mLatLng.longitude),30);
+        mgeo.removeAllListeners();
+        return mgeo;
+    }
 }
