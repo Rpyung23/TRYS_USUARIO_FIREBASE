@@ -6,40 +6,68 @@
     android:layout_gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryLight"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/id_circle_profile_header_menu_view"
-        android:layout_marginTop="?actionBarSize"
-        android:layout_marginBottom="10dp"
-        android:src="@drawable/logomenufinal"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:civ_border_width="7dp"
-        app:civ_border_color="@color/colorPrimaryDark"
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:background="@color/colorPrimaryLight"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
         >
-    </de.hdodenhof.circleimageview.CircleImageView>
-    <TextView
-        android:id="@+id/id_textview_name_profile_header_menu_view"
-        android:textColor="@color/colorPrimaryText"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="22sp"
-        android:text="NELSON YUNGA"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TextView>
-    <TextView
-        android:id="@+id/id_textview_phone_profile_header_menu_view"
-        android:textColor="@color/colorPrimaryText"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:textSize="22sp"
-        android:text="0993706012"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TextView>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.60"
+            android:gravity="center"
+            >
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:id="@+id/id_circle_profile_header_menu_view"
+                android:src="@drawable/logomenufinal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/alto_acnho_img_profile_head_menu"
+                app:civ_border_width="5dp"
+                app:civ_border_color="@color/colorDivCar"
+                >
+            </de.hdodenhof.circleimageview.CircleImageView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.40"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/id_textview_name_profile_header_menu_view"
+                android:textColor="@color/colorSecondaryText"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="17sp"
+                android:text="XXXXX XXXXX"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
+                android:id="@+id/id_textview_phone_profile_header_menu_view"
+                android:textColor="@color/colorSecondaryText"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="xxxxxxxxx"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
     <View
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorDivCar"
         android:layout_width="match_parent"
         android:layout_height="5dp">
     </View>

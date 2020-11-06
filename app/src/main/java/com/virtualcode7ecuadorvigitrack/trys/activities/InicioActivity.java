@@ -11,6 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -224,6 +225,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         toolbar = findViewById(R.id.id_toolbar_mapview);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
+        //getSupportActionBar().setIcon(R.drawable.round_hamburger);
+
         mSupportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapview);
         mDrawerLayout = findViewById(R.id.drawerlayout);
@@ -257,7 +260,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                 {
                     case R.id.id_history:
                         Intent intent = new Intent(InicioActivity.this,HistoryBookingActivity.class);
-                        startActivity(intent);
+                        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(InicioActivity.this).toBundle());
                         break;
                     case R.id.id_singOut:
 
@@ -295,7 +298,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                         intent1.putExtra("email",oUser.getEmail());
                         intent1.putExtra("phone",oUser.getPhone());
                         intent1.putExtra("name",oUser.getName());
-                        startActivity(intent1);
+                        startActivity(intent1,ActivityOptions.makeSceneTransitionAnimation(InicioActivity.this).toBundle());
                         break;
                     case R.id.id_informacion:
                         createAlertDialogInformacion();
@@ -405,7 +408,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             intent.putExtra("token_phone_client",String.valueOf(snapshot.child("token")
                                     .getValue().toString()));
                             intent.putExtra("tipo",11);
-                            startActivity(intent);
+                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(InicioActivity.this).toBundle());
                             mAlertDialogSinDestino.cancel();
                             mAlertDialogSinDestino.dismiss();
                             finish();
@@ -482,7 +485,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                             intent.putExtra("token_phone_client",String.valueOf(snapshot.child("token")
                                     .getValue().toString()));
                             intent.putExtra("tipo",1);
-                            startActivity(intent);
+                            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(InicioActivity.this).toBundle());
                             alertDialog_showPreviewSolicitud.cancel();
                             finish();
                         }
@@ -504,7 +507,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
     {
         Intent intent = new Intent(InicioActivity.this,LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
     private void configurarDrawerLayout()
@@ -838,7 +841,8 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                                     .getValue().toString()));
                             intent_.putExtra("price",Double.parseDouble(snapshot1.child("price")
                                     .getValue().toString()));
-                            startActivity(intent_);
+                            startActivity(intent_,ActivityOptions.makeSceneTransitionAnimation(InicioActivity.this)
+                                    .toBundle());
                         }
                     }
                 }

@@ -19,4 +19,5 @@
     <dimen name="margin_left_edittext_chat">7dp</dimen>
     <dimen name="alto_acnho_circle_profile_edit">170dp</dimen>
     <dimen name="textsize_save_profile">18sp</dimen>
+    <dimen name="alto_acnho_img_profile_head_menu">100dp</dimen>
 </resources>

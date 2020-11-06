@@ -5,9 +5,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +23,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -164,6 +169,8 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                view.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.animate_button_login));
+
                 if (!mTextInputEditTextEmail.getText().toString().isEmpty() &&
                         !mTextInputEditTextPass.getText().toString().isEmpty())
                 {
@@ -219,6 +226,7 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                view.startAnimation(AnimationUtils.loadAnimation(LoginActivity.this, R.anim.animate_button_login));
                 CardView mCardFacebook;
                 CardView mCardEmail;
                 CardView mCardGoogle;
@@ -354,7 +362,7 @@ public class LoginActivity extends AppCompatActivity
         updatetokenPhone();
         Intent intent = new Intent(LoginActivity.this, InicioActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         finish();
     }
 
@@ -362,7 +370,7 @@ public class LoginActivity extends AppCompatActivity
     {
         Intent intent = new Intent(LoginActivity.this, RegisterClientActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
     }
 
     private boolean checkPermission()

@@ -128,7 +128,9 @@
         android:layout_height="@dimen/alto_acnho_circle_view_login"
         app:civ_border_width="7dp"
         app:civ_border_color="@color/colorPrimaryDark"
-        android:src="@drawable/logomenufinal"
+        android:scaleType="centerCrop"
+        app:civ_circle_background_color="@color/colorSecondaryText"
+        android:src="@drawable/logo_notificaciones_app"
         android:layout_marginTop="@dimen/marginTop_circle_view_login"
         android:layout_gravity="center|top"
         />
