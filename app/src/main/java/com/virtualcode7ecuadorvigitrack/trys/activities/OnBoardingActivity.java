@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ public class OnBoardingActivity extends AppCompatActivity
             finish();
         }
         PaperOnboardingPage scr1 = new PaperOnboardingPage("Escribe tu destino",
-                "Proporciona tu ubicacion de viaje o simplemente solicita un taxi",
+                "Proporciona tu ubicación de viaje o simplemente solicita un taxi",
                 Color.WHITE, R.drawable.rutas_taxi_onboarding, R.drawable.point_onboarding);
         PaperOnboardingPage scr2 = new PaperOnboardingPage("Solicita un taxi",
                 "Seleciona el conductor mas cercano en un radio de 5 km",
@@ -66,7 +67,7 @@ public class OnBoardingActivity extends AppCompatActivity
         mProviderSharedPreferencesOnBoarding.writeSharedOnBoarding(1);
         Intent intent = new Intent(OnBoardingActivity.this,LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        startActivity(intent);
+        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
         super.onDestroy();
     }
 }
