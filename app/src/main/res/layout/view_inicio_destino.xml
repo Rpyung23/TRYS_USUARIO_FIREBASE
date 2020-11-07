@@ -22,6 +22,8 @@
             android:layout_height="?actionBarSize">
         </EditText>
         <TextView
+            android:scrollbars="vertical"
+            android:textSize="19sp"
             android:id="@+id/id_edittext_mi_destino"
             android:gravity="center"
             android:drawableTint="@color/colorPrimaryDark"

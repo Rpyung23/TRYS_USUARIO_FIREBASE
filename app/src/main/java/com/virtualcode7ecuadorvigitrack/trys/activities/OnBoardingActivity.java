@@ -35,13 +35,13 @@ public class OnBoardingActivity extends AppCompatActivity
         }
         PaperOnboardingPage scr1 = new PaperOnboardingPage("Escribe tu destino",
                 "Proporciona tu ubicación de viaje o simplemente solicita un taxi",
-                Color.WHITE, R.drawable.rutas_taxi_onboarding, R.drawable.point_onboarding);
+                Color.WHITE, R.drawable.rutas_taxi_onboarding, R.drawable.onboarding_taxi);
         PaperOnboardingPage scr2 = new PaperOnboardingPage("Solicita un taxi",
-                "Seleciona el conductor mas cercano en un radio de 5 km",
-                Color.WHITE, R.drawable.solicita_taxi_onboarding, R.drawable.point_onboarding);
+                "Selecciona el conductor más cercano en un radio de 5 km",
+                Color.WHITE, R.drawable.solicita_taxi_onboarding, R.drawable.onboarding_taxi);
         PaperOnboardingPage scr3 = new PaperOnboardingPage("Toma tu taxi",
                 "Verificamos cuidadosamente todos los conductores antes de agregarlos a la aplicación",
-                Color.WHITE, R.drawable.toma_taxi_onboarding, R.drawable.point_onboarding);
+                Color.WHITE, R.drawable.toma_taxi_onboarding, R.drawable.onboarding_taxi);
 
         ArrayList<PaperOnboardingPage> elements = new ArrayList<>();
         elements.add(scr1);
