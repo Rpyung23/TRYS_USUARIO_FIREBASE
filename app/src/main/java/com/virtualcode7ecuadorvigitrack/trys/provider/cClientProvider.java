@@ -1,5 +1,6 @@
 package com.virtualcode7ecuadorvigitrack.trys.provider;
 
+import android.app.AlertDialog;
 import android.util.Log;
 
 import com.google.android.gms.tasks.Task;
@@ -8,11 +9,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.virtualcode7ecuadorvigitrack.trys.models.cUser;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class cClientProvider
 {
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
+
     public cClientProvider()
     {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
@@ -48,6 +51,19 @@ public class cClientProvider
     {
         return mDatabaseReference.child(oU.getId_token_())
                 .updateChildren(createHashClientUpdate(oU));
+    }
+
+    public Task<Void> UpdatePhone(String key,String phone)
+    {
+        return mDatabaseReference.child(key)
+                .updateChildren(createHashPhoneUpdate(phone));
+    }
+
+    private Map<String, Object> createHashPhoneUpdate(String phone)
+    {
+        HashMap<String,Object> hashMap = new HashMap<>();
+        hashMap.put("Phone",phone);
+        return hashMap;
     }
 
     private HashMap<String,Object> createHashClientUpdate(cUser oU)

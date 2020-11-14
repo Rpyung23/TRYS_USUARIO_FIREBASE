@@ -59,6 +59,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class RegisterClientActivity extends AppCompatActivity implements View.OnClickListener
 {
 
@@ -158,7 +160,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         new cToolbar().showToolbar(this,getString(R.string.toolbar_regitro_client)
                 ,true);
 
-        callBroadCastReciverSms();
+        //callBroadCastReciverSms();
 
         mButtonCreateClient = findViewById(R.id.id_button_create_client);
         mCircleImageViewClient = findViewById(R.id.id_circleview_photo_client);
@@ -167,6 +169,8 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         mTextInputEditTextPass = findViewById(R.id.id_textinput_password);
         mTextInputEditTextPhone = findViewById(R.id.id_textinput_phone);
         mBroadcastMsmAuthPhoneFire = new cBroadcastMsmAuthPhoneFire();
+
+        mProviderUploadPhoto = new cProviderUploadPhoto(RegisterClientActivity.this);
 
         mFirebaseProviderAuth = new cFirebaseProviderAuth();
         mClientProvider = new cClientProvider();
@@ -179,7 +183,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
            showPermissionReadSMS();
         }
 
-        mHandlerCountTime = new Handler();
+        //mHandlerCountTime = new Handler();
 
         mCircleImageViewClient.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,14 +201,32 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
             {
 
                 if (!mTextInputEditTextPass.getText().toString().isEmpty() &&
-                        mTextInputEditTextPass.getText().toString().length()>= 6)
+                        mTextInputEditTextPass.getText().toString().length()>= 8)
                 {
                     if (!mTextInputEditTextPass.getText().toString().isEmpty()  &&
                             !mTextInputEditTextEmail.getText().toString().isEmpty() &&
                             !mTextInputEditTextName.getText().toString().isEmpty() &&
                             !mTextInputEditTextPhone.getText().toString().isEmpty())
                     {
+                        if(mTextInputEditTextPhone.length()>=9 &&
+                                mTextInputEditTextPhone.length()<11)
+                        {
+                            /**Inicia el registro**/
 
+                            Ou.setEmail(mTextInputEditTextEmail.getText().toString());
+                            Ou.setName(mTextInputEditTextName.getText().toString());
+                            Ou.setPhone(mTextInputEditTextPhone.getText().toString());
+                            Ou.setPhoto_url("");
+
+                            createClient(mTextInputEditTextEmail.getText().toString(),
+                                    mTextInputEditTextPass.getText().toString());
+                        }else
+                            {
+                                Toasty.info(RegisterClientActivity.this,"Su numero telefónico no es valido, Ejemplo : 0995590009");
+                            }
+                        /*Intent intent = new Intent(RegisterClientActivity.this,VeriPhoneActivity.class);
+                        startActivity(intent);
+                        /*
                         Ou.setEmail(mTextInputEditTextEmail.getText().toString());
                         Ou.setName(mTextInputEditTextName.getText().toString());
                         Ou.setPhone(mTextInputEditTextPhone.getText().toString());
@@ -215,11 +237,13 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                                 ,mTextInputEditTextPass.getText().toString());*/
                  }else
                         {
-                            showSnackbar("EXISTEN DATOS VACIOS!!");
+                            Toasty.error(RegisterClientActivity.this,"EXISTEN DATOS VACIOS!!",Toasty.LENGTH_LONG).show();
+                            //showSnackbar("");
                         }
                 }else
                     {
-                        showSnackbar("PASSWORD NO VALIDO !!!");
+                        Toasty.error(RegisterClientActivity.this,"CONTRASEÑA NO VALIDA!!",Toasty.LENGTH_LONG).show();
+                        //showSnackbar("PASSWORD NO VALIDO !!!");
                     }
             }
         });
@@ -291,7 +315,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
         View view_veri_phone = LayoutInflater.from(RegisterClientActivity.this)
                 .inflate(R.layout.phone_verification,null,false);
 
-        mProviderUploadPhoto = new cProviderUploadPhoto(RegisterClientActivity.this);
+
 
         mButtonVeri_Cancel = view_veri_phone.findViewById(R.id.id_btn_verificar_cancelar);
         mTextviewNewIntento = view_veri_phone.findViewById(R.id.id_textview_intentar_nuevamente);
@@ -381,7 +405,8 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
             public void onFailure(@NonNull Exception e)
             {
                 Toasty.error(RegisterClientActivity.this,e.getMessage().toString(),Toasty.LENGTH_SHORT).show();
-                cancelarAlertProgress();
+                //cancelarAlertProgress();
+                dismissAlertDialog();
             }
 
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -394,7 +419,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                     // Driver --->Carpeta
                     // %2F
                     //?alt=media&token=5b88a844-15af-4ce8-b55f-ff392cf11b3c
-                    Toasty.success(RegisterClientActivity.this,"FOTO OK",Toasty.LENGTH_SHORT).show();
+                    //Toasty.success(RegisterClientActivity.this,"FOTO OK",Toasty.LENGTH_SHORT).show();
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     Log.e("PATH",taskSnapshot.getMetadata().getPath());
                     StorageReference storageRef = storage.getReference(taskSnapshot.getMetadata().getPath());
@@ -409,9 +434,10 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                         @Override
                         public void onFailure(@NonNull Exception e)
                         {
-                            cancelarAlertProgress();
+                            //cancelarAlertProgress();
                             Toasty.error(RegisterClientActivity.this,e.getMessage().toString(),
                                     Toasty.LENGTH_SHORT).show();
+                            dismissAlertDialog();
                         }
                     });
 
@@ -419,8 +445,9 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                             taskSnapshot.getMetadata().getPath()+"?alt=media&token="+taskSnapshot.getStorage().get;*/
                 }else
                 {
-                    cancelarAlertProgress();
+                    //cancelarAlertProgress();
                     Toast.makeText(RegisterClientActivity.this, "Error Foto", Toast.LENGTH_SHORT).show();
+                    dismissAlertDialog();
                 }
             }
         });
@@ -477,10 +504,10 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
                             dismissAlertDialog();
                             Toast.makeText(RegisterClientActivity.this, "Registro Completo", Toast.LENGTH_SHORT)
                                     .show();
-                            getApplicationContext().unregisterReceiver(mBroadcastMsmAuthPhoneFire);
+                            //getApplicationContext().unregisterReceiver(mBroadcastMsmAuthPhoneFire);
                             Intent intent = new Intent(RegisterClientActivity.this
                                     ,InicioActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
                         }
@@ -506,6 +533,7 @@ public class RegisterClientActivity extends AppCompatActivity implements View.On
 
     private void dismissAlertDialog()
     {
+        cancelarAlertProgress();
         alertDialog.cancel();
         alertDialog.dismiss();
     }

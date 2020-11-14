@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.VeriPhoneActivity"
+
+    >
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimaryLight"
+        app:title="@string/title_toolbar_update_phone"
+        app:titleTextColor="@android:color/white"
+        >
+    </androidx.appcompat.widget.Toolbar>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:orientation="vertical"
+        android:layout_marginTop="?actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/id_textview_name_client_new_phone"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorPrimaryText"
+            android:textStyle="bold"
+            android:textSize="30sp"
+            android:text="Bienvenido XXXXXX XXXXXX "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:text="Cual su nuevo numero telefónico?"
+            >
+        </TextView>
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="22sp"
+                android:text="+593"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+            <EditText
+                android:id="@+id/id_edit_phone_new"
+                android:paddingLeft="2dp"
+                android:inputType="number"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_phone"
+                >
+            </EditText>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/id_button_next_new_phone"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimaryLight"
+        android:text="SIGUIENTE"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:paddingRight="20dp"
+        android:drawableEnd="@android:drawable/ic_media_next"
+        android:textSize="@dimen/textsize_22sp_login_registro"
+        >
+    </androidx.appcompat.widget.AppCompatButton>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

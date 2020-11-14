@@ -73,6 +73,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class LoginActivity extends AppCompatActivity
 {
     private static final int RC_SIGN_IN = 25689;
@@ -361,16 +363,16 @@ public class LoginActivity extends AppCompatActivity
     {
         updatetokenPhone();
         Intent intent = new Intent(LoginActivity.this, InicioActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
     }
 
     private void openActivityRegisterClient()
     {
         Intent intent = new Intent(LoginActivity.this, RegisterClientActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     private boolean checkPermission()

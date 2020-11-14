@@ -14,17 +14,18 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo_notificaciones_app"
+        android:icon="@drawable/circle_icono_app"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".activities.OnBoardingActivity"
-            >
+        <activity android:name=".activities.CompleteCodePhoneActivity"></activity>
+        <activity android:name=".activities.VeriPhoneActivity" />
+        <activity android:name=".activities.OnBoardingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -64,13 +65,10 @@
                 android:value="com.virtualcode7ecuadorvigitrack.trys.activities.InicioActivity" />
         </activity>
         <activity android:name=".activities.InicioActivity" />
-
         <activity
             android:name=".activities.RegisterClientActivity"
             android:parentActivityName=".activities.LoginActivity" />
-
-        <activity android:name=".activities.LoginActivity">
-        </activity>
+        <activity android:name=".activities.LoginActivity" />
 
         <receiver
             android:name=".broadcast.cBroadcastMsmAuthPhoneFire"

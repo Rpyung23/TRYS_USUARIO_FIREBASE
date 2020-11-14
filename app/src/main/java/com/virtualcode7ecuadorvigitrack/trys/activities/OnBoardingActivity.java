@@ -18,6 +18,8 @@ import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderSharedPreferences
 
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class OnBoardingActivity extends AppCompatActivity
 {
     private cProviderSharedPreferencesOnBoarding mProviderSharedPreferencesOnBoarding;
@@ -66,8 +68,8 @@ public class OnBoardingActivity extends AppCompatActivity
     {
         mProviderSharedPreferencesOnBoarding.writeSharedOnBoarding(1);
         Intent intent = new Intent(OnBoardingActivity.this,LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         super.onDestroy();
     }
 }

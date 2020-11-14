@@ -7,7 +7,7 @@
     <string name="hint_last_name">Ingrese su apellido</string>
     <string name="hint_ingrese_mail">Ingrese su correo</string>
     <string name="hint_password">Ingrese su password</string>
-    <string name="hint_phone">Ingrese su telefono</string>
+    <string name="hint_phone">Ingrese su télefono</string>
     <string name="toolbar_regitro_client">NUEVO CLIENTE</string>
     <string name="api_key_google_maps">AIzaSyBqzy7lfHM1Bmb2ldsrvEbyBK7idFVr0t8</string>
     <string name="vacio" />
@@ -22,5 +22,7 @@
     <string name="fb_login_protocol_scheme">fb[927690041053780]</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_toolbar_update_phone">Cambio de número</string>
+    <string name="recibir_code">Ingrese el código que ha recibido</string>
 
 </resources>

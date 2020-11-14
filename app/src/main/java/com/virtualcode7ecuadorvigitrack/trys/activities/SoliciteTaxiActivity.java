@@ -81,7 +81,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
     private static int cont= 30;
 
-    private float mRadio = 1;
+    private float mRadio = (float) 0.1;
 
     private GeoQueryEventListener geoQueryEventListener;
 

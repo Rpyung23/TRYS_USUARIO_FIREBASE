@@ -70,6 +70,8 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+
 public class BookingActivity extends AppCompatActivity implements OnMapReadyCallback
 {
     private GoogleMap mGoogleMap;
@@ -189,6 +191,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                                         .leerSharedPreferences());
                                 Intent intent = new Intent(BookingActivity.this
                                         ,InicioActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                             }
                         });
@@ -466,7 +469,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
                         Log.e("KEYCHANGE",snapshot.getKey().toString());
                         new cFirebaseMessaging().deleteMessaging(mProviderSharedUiConductor.leerSharedPreferences());
                         Intent intent = new Intent(BookingActivity.this,RatingDriverActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| FLAG_ACTIVITY_CLEAR_TOP);
                         intent.putExtra("id_driver",mProviderSharedUiConductor.leerSharedPreferences());
                         startActivity(intent);
                         finish();

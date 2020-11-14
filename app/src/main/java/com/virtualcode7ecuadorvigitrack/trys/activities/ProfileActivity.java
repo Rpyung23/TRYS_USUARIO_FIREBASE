@@ -44,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity
     private TextInputEditText mTextInputEditTextName;
     private TextInputEditText mTextInputEditTextPhone;
     private Button mButtonUpdate;
+    private Button mButtonEditPhone;
 
     private cFirebaseProviderAuth mFirebaseProviderAuth;
     private cClientProvider mClientProvider;
@@ -79,6 +80,7 @@ public class ProfileActivity extends AppCompatActivity
         mTextInputEditTextName = findViewById(R.id.id_inputtext_name);
         mTextInputEditTextPhone = findViewById(R.id.id_inputtext_phone);
         mButtonUpdate = findViewById(R.id.id_btn_update_profile);
+        mButtonEditPhone = findViewById(R.id.id_button_update_phone);
 
         mTextInputEditTextEmail.setText(email);
         mTextInputEditTextName.setText(name);
@@ -99,6 +101,16 @@ public class ProfileActivity extends AppCompatActivity
             }
         });
 
+        mButtonEditPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                /*****/
+                Intent intent = new Intent(ProfileActivity.this,VeriPhoneActivity.class);
+                intent.putExtra("name",mTextInputEditTextName.getText().toString());
+                startActivity(intent);
+            }
+        });
 
         mButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -23,7 +23,7 @@ public class cGeoFire
     private DatabaseReference mDatabaseReference;
     private GeoFire mGeoFire;
     private GeoQuery mGeoQuery;
-
+    private GeoQuery mge;
 
 
     private boolean isdriver=false;
@@ -140,11 +140,11 @@ public class cGeoFire
     }
 
 
-    public GeoQuery getActiveDriver(LatLng mLatLng)
+    public GeoQuery getActiveDriver(LatLng mLatLng,float radio)
     {
-        GeoQuery mgeo = mGeoFire.queryAtLocation(new GeoLocation(mLatLng.latitude,
-                mLatLng.longitude),30);
-        mgeo.removeAllListeners();
-        return mgeo;
+        mge = mGeoFire.queryAtLocation(new GeoLocation(mLatLng.latitude,
+                mLatLng.longitude),radio);
+        mge.removeAllListeners();
+        return mge;
     }
 }

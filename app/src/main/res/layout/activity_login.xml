@@ -130,10 +130,18 @@
         app:civ_border_color="@color/colorPrimaryDark"
         android:scaleType="centerCrop"
         app:civ_circle_background_color="@color/colorSecondaryText"
-        android:src="@drawable/logo_notificaciones_app"
+        android:src="@drawable/circle_white"
         android:layout_marginTop="@dimen/marginTop_circle_view_login"
         android:layout_gravity="center|top"
         />
+    <ImageView
+        android:layout_width="@dimen/alto_acnho_circle_view_login"
+        android:layout_height="@dimen/alto_acnho_circle_view_login"
+        android:scaleType="centerInside"
+        android:src="@drawable/taxi_home"
+        android:layout_marginTop="@dimen/marginTop_circle_view_login"
+        android:layout_gravity="center|top">
+    </ImageView>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_gravity="bottom"

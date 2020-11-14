@@ -41,7 +41,7 @@
                     android:layout_marginLeft="5dp"
                     android:textStyle="bold"
                     android:textSize="25dp"
-                    android:text="Correo Electónico"
+                    android:text="Correo Electrónico"
                     android:textColor="@color/colorSecondaryText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
