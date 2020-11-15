@@ -40,18 +40,21 @@
         </androidx.appcompat.widget.AppCompatImageButton>
 
         <androidx.appcompat.widget.AppCompatEditText
+
             android:id="@+id/id_edittext_chats"
-            android:paddingLeft="@dimen/margin_left_edittext_chat"
-            android:layout_centerVertical="true"
-            android:hint="@string/hint_enter_a_message"
-            android:textColorHint="#66000000"
             android:layout_width="@dimen/ancho_edittext_chats"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="16dp"
+            android:layout_toStartOf="@+id/id_botton_send_chats"
+            android:layout_toEndOf="@+id/id_camera_galery_chats"
             android:background="@android:color/white"
-            android:layout_centerInParent="true"
+            android:hint="@string/hint_enter_a_message"
+            android:paddingLeft="@dimen/margin_left_edittext_chat"
             android:scrollbars="vertical"
-            >
-        </androidx.appcompat.widget.AppCompatEditText>
+            android:textColorHint="#66000000"></androidx.appcompat.widget.AppCompatEditText>
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

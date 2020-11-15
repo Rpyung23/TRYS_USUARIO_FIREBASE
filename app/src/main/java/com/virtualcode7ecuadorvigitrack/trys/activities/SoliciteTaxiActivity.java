@@ -30,9 +30,12 @@ import com.virtualcode7ecuadorvigitrack.trys.models.cSolicitudTaxi;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cBookingDriver;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cGeoFire;
 import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderSharedUiCondutor;
+import com.virtualcode7ecuadorvigitrack.trys.provider.cProviderToken;
 import com.virtualcode7ecuadorvigitrack.trys.volley.cVolleyNotification;
 
+import java.util.ArrayList;
 import java.util.EventListener;
+import java.util.List;
 
 public class SoliciteTaxiActivity extends AppCompatActivity
 {
@@ -47,6 +50,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
     private  int tipo;
     private double time;
     private double distance;
+    private List<cSolicitudTaxi> mSolicitudTaxiList = new ArrayList<>();
 
 
 
@@ -79,7 +83,7 @@ public class SoliciteTaxiActivity extends AppCompatActivity
 
     private Handler mHandler;
 
-    private static int cont= 30;
+    private static int cont= 35;
 
     private float mRadio = (float) 0.1;
 
@@ -178,13 +182,43 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             @Override
             public void onKeyEntered(String key, GeoLocation location)
             {
-                if (!isdriver)
+
+                for (cSolicitudTaxi mSolicitudTaxi :mSolicitudTaxiList)
+                {
+                    if (mSolicitudTaxi.getId_token_drivers().equals(key))
+                    {
+                        return;
+                    }
+                }
+
+                cSolicitudTaxi mSolicitudTaxi = new cSolicitudTaxi();
+
+                mSolicitudTaxi.setId_token_drivers(key);
+
+                mSolicitudTaxi.setToken_client_phone(token_phone_client);
+                mSolicitudTaxi.setId_token_client(id_client);
+                mSolicitudTaxi.setFecha(fecha);
+                mSolicitudTaxi.setPrice(price);
+                mSolicitudTaxi.setLatitud_start(latitud_inicio);
+                mSolicitudTaxi.setLongitud_start(longitud_inicio);
+                mSolicitudTaxi.setLatitud_end(latitud_fin);
+                mSolicitudTaxi.setLongitud_end(longitud_fin);
+                mSolicitudTaxi.setStatus("create");
+                mSolicitudTaxi.setTime(time);
+                mSolicitudTaxi.setDistance(distance);
+                mSolicitudTaxi.setTipo(tipo);
+
+
+                mSolicitudTaxiList.add(mSolicitudTaxi);
+                Log.e("KEYSNOTI"," -> "+key);
+
+               /* METODO FUNCIONAL SOLO Q ENVIA 1 taxi if (!isdriver)
                 {
                     isdriver=true;
                     Log.e("NOTI","ENVIANDO");
                     mProviderSharedUiCondutor.writeSharedPreferences(key);
                     readTokenDriver(key);
-                }
+                }*/
             }
 
             @Override
@@ -201,7 +235,6 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             @Override
             public void onGeoQueryReady()
             {
-
                 if (!isdriver)
                 {
                     mRadio = mRadio+0.1f;
@@ -209,6 +242,12 @@ public class SoliciteTaxiActivity extends AppCompatActivity
                     if (mRadio>5)
                     {
                         Log.e("NOTI","NO ENCONTRO");
+                        /***CODIGO PROXIMO ES PARA LEER DATOS DE TODAS LAS KEY**/
+
+
+                        readTokenDriverList();
+                        readBookingDriverList();
+                        /****/
                         isdriver=true;
                         return;
                     }else
@@ -222,6 +261,42 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             public void onGeoQueryError(DatabaseError error)
             {
                 Log.e("NOTI",error.getMessage());
+            }
+        });
+    }
+
+    private void readTokenDriverList()
+    {
+        cProviderToken mProviderToken = new cProviderToken();
+        mProviderToken.readAllDriversTokens().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
+                /**READ Token ALL DRIVERs**/
+                if (snapshot.exists())
+                {
+                    for (DataSnapshot mDataSnapshot : snapshot.getChildren())
+                    {
+                        for (int i = 0; i<mSolicitudTaxiList.size();i++)
+                        {
+                            if (mSolicitudTaxiList.get(i).getId_token_drivers()
+                                    .equals(mDataSnapshot.getKey()))
+                            {
+                                mSolicitudTaxiList.get(i).setToken_driver_phone(mDataSnapshot.child("token")
+                                        .getValue().toString());
+                            }
+                        }
+                    }
+
+                    /**ENVIO AL SERVICE FCM METODO CON LISTA DE DRIVER**/
+                    OvolleyNotification.createNotificationServerFirebaseList(mSolicitudTaxiList,0,
+                            mSolicitudTaxiList.size());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
@@ -257,6 +332,112 @@ public class SoliciteTaxiActivity extends AppCompatActivity
             }
         });
 
+    }
+
+
+    private void readBookingDriverList()
+    {
+        mChildEventListener = mBookingDriver.getmDatabaseReference()
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+                    {
+                        for (cSolicitudTaxi oS : mSolicitudTaxiList)
+                        {
+                            if (snapshot.child("id_client").getValue().toString()
+                                    .equals(oS.getId_token_client()))
+                            {
+                                eventEscuchaCambiosStatusList(snapshot.getKey(),oS);
+                                return;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+                    {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot snapshot)
+                    {
+
+                    }
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+                    {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void eventEscuchaCambiosStatusList(final String key,final cSolicitudTaxi solicitudTaxi)
+    {
+        mValueEventListener = mBookingDriver.getmDatabaseReference().child(key)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot)
+                    {
+                        if (snapshot.exists())
+                        {
+                            mDatabaseReference.removeEventListener(mChildEventListener);/** Elimino los eventos de exuchas de nodos**/
+                            if (mValueEventListener!=null)
+                            {
+                                mBookingDriver.getmDatabaseReference().child(key)
+                                        .removeEventListener(mValueEventListener);
+                            }
+
+                            if (snapshot.child("status").getValue().toString().equals("create"))
+                            {
+                                /** Driver Acepto **/
+                                Intent intent = new Intent(SoliciteTaxiActivity.this
+                                        ,BookingActivity.class);
+                                cProviderSharedUiCondutor mProviderSharedUiCondutor =
+                                        new cProviderSharedUiCondutor(SoliciteTaxiActivity.this);
+                                mProviderSharedUiCondutor.writeSharedPreferences(key);
+                                finish();
+                                intent.putExtra("id_driver",key);
+                                intent.putExtra("price",solicitudTaxi.getPrice());
+                                intent.putExtra("latitud_start",solicitudTaxi.getLatitud_start());
+                                intent.putExtra("longitud_start",solicitudTaxi.getLongitud_start());
+                                intent.putExtra("latitud_end",solicitudTaxi.getLatitud_end());
+                                intent.putExtra("longitud_end",solicitudTaxi.getLongitud_end());
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+
+                            }else if(snapshot.child("status").getValue().toString().equals("cancel"))
+                            {
+                        /*Toast.makeText(SoliciteTaxiActivity.this, "NO DRIVER"
+                                ,Toast.LENGTH_SHORT).show();
+                        /** Driver NO Acepto **/
+                                finish();
+                                Intent intent_ = new Intent(SoliciteTaxiActivity.this
+                                        ,InicioActivity.class);
+                                intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent_);
+                            }/*else if(snapshot.child("status").getValue().toString().equals("finalize"))
+                    {
+                        Intent intent_ = new Intent(SoliciteTaxiActivity.this
+                                ,InicioActivity.class);
+                        intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent_);
+                        finish();
+                    }*/
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error)
+                    {
+
+                    }
+                });
     }
 
 

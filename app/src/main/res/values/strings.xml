@@ -11,7 +11,7 @@
     <string name="toolbar_regitro_client">NUEVO CLIENTE</string>
     <string name="api_key_google_maps">AIzaSyBqzy7lfHM1Bmb2ldsrvEbyBK7idFVr0t8</string>
     <string name="vacio" />
-    <string name="text_boton_solicitar">SOLICITAR</string>
+    <string name="text_boton_solicitar">SOLICITAR TAXI</string>
     <string name="text_cancelar_boton">CANCELAR</string>
     <string name="text_confirmar_boton">CONFIRMAR</string>
     <string name="string_taxi_cercano">BUSCANDO TAXI MAS CERCANO</string>

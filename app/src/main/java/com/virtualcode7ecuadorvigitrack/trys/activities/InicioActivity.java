@@ -73,6 +73,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -96,6 +97,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
 
@@ -148,7 +150,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private AlertDialog alertDialog_showPreviewSolicitud;
 
-    private ValueEventListener mValueEventListenerAllDriving;
+    private ChildEventListener mValueEventListenerAllDriving;
 
     private cUser oUser = new cUser();
     private List<Marker> markerListDriver = new ArrayList<>();
@@ -697,6 +699,7 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
         DatabaseReference mDatabaseReferenceV = mFirebaseDatabaseV
                 .getReference("Booking").child(new cProviderSharedUiCondutor(InicioActivity.this)
                         .leerSharedPreferences());
+
         mDatabaseReferenceV.addListenerForSingleValueEvent(new ValueEventListener()
         {
             @Override
@@ -704,31 +707,31 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
             {
                 if(snapshot.exists())
                 {
-                    for (DataSnapshot snapshot1 : snapshot.getChildren())
-                    {
-                        String key = snapshot1.child("id_client").getValue().toString();
+                    Log.e("KEY",snapshot.getKey());
+
+
+                        String key = snapshot.child("id_client").getValue().toString();
                         if (key.equals(mFirebaseProviderAuth.getmFirebaseAuth().getCurrentUser()
                                 .getUid()) &&
-                                snapshot1.child("status").getValue().toString().equals("create"))
+                                snapshot.child("status").getValue().toString().equals("create"))
                         {
                             Intent intent_ = new Intent(InicioActivity.this
                                     ,BookingActivity.class);
 
                             //intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent_.putExtra("id_driver",snapshot1.child("id_driver").getValue().toString());
-                            intent_.putExtra("latitud_start",Double.parseDouble(snapshot1.child("latitud_start")
+                            intent_.putExtra("id_driver",snapshot.child("id_driver").getValue().toString());
+                            intent_.putExtra("latitud_start",Double.parseDouble(snapshot.child("latitud_start")
                                     .getValue().toString()));
-                            intent_.putExtra("longitud_start",Double.parseDouble(snapshot1.child("longitud_start")
+                            intent_.putExtra("longitud_start",Double.parseDouble(snapshot.child("longitud_start")
                                     .getValue().toString()));
-                            intent_.putExtra("latitud_end",Double.parseDouble(snapshot1.child("latitud_end")
+                            intent_.putExtra("latitud_end",Double.parseDouble(snapshot.child("latitud_end")
                                     .getValue().toString()));
-                            intent_.putExtra("longitud_end",Double.parseDouble(snapshot1.child("longitud_end")
+                            intent_.putExtra("longitud_end",Double.parseDouble(snapshot.child("longitud_end")
                                     .getValue().toString()));
-                            intent_.putExtra("price",Double.parseDouble(snapshot1.child("price")
+                            intent_.putExtra("price",Double.parseDouble(snapshot.child("price")
                                     .getValue().toString()));
                             intent_.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK| FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent_);
-                        }
                     }
                 }
             }
@@ -787,157 +790,172 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
 
     private void readingGpsAllWorking()
     {
-        /***mGeoFireWorking.getActiveDriver(mLatLng,30)
-                .addGeoQueryEventListener(new GeoQueryEventListener() {
-                    @Override
-                    public void onKeyEntered(String key, GeoLocation location)
-                    {
-                        Log.e("Marker",key);
-                        //Toast.makeText(InicioActivity.this, "gps", Toast.LENGTH_SHORT).show();
-                        /**Añado los marker los nuevos**/
-                     /**   for (Marker marker : markerListDriver)
-                        {
-                            if(marker.getTag() != null)
-                            {
-                                if (marker.getTag().equals(key))
-                                {
-                                    Log.e("Marker","EXISTS");
-                                    return;
-                                }
-                            }
-                        }
-
-
-                        try {
-
-                            Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(location.latitude,location.longitude))
-                                    .title("Conductor Disponible")
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo))
-                            );
-
-                            marker.setTag(key);
-                            Log.e("Marker",marker.getTag().toString());
-                            markerListDriver.add(marker);
-                        }catch (Exception e)
-                        {
-                            Log.e("Marker",e.getMessage().toString());
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onKeyExited(String key)
-                  /**  {
-                        /**Elimar los marker q se desconectan**/
-                     /**
-                        for (Marker marker : markerListDriver)
-                        {
-                            Log.e("Marker","Exited -> "+key);
-                            if(marker.getTag() != null)
-                            {
-                                if (marker.getTag().equals(key))
-                                {
-                                    marker.remove();
-                                    markerListDriver.remove(marker);
-                                    return;
-                                }
-                            }
-                        }
-
-                    }
-
-                    @Override
-                    public void onKeyMoved(String key, GeoLocation location)
-                    {
-                        /**Actualizar la posicion**/
-                      /***  for (Marker marker : markerListDriver)
-                        {
-                            Log.e("Marker","Moved ->"+key);
-                            if(marker.getTag() != null)
-                            {
-                                if (marker.getTag().equals(key))
-                                {
-                                    marker.setRotation(getBearing(marker.getPosition(),
-                                            new LatLng(location.latitude,
-                                                    location.longitude)));
-
-                                    marker.setPosition(new LatLng(location.latitude,
-                                            location.longitude));
-                                }
-                            }
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onGeoQueryReady() {
-
-                    }
-
-                    @Override
-                    public void onGeoQueryError(DatabaseError error) {
-
-                    }
-                });***/
-
-       mValueEventListenerAllDriving = mFirebaseProviderWorking.getmDatabaseReference()
-         .addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot snapshot)
-        {
-            if (snapshot.exists())
+        mValueEventListenerAllDriving = mFirebaseProviderWorking.getmDatabaseReference().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
             {
-                for (DataSnapshot snapshot1 : snapshot.getChildren())
+                /**Add Marker**/
+                if(snapshot.exists())
                 {
-                        for ( Marker marker : markerListDriver)
-                        {
-                            if (marker.getTag()==snapshot1.getKey())
-                            {
-                                return;
-                            }
-                        }
+                    if (aroundCalc(snapshot))
+                    {
+                        Log.e("Marker","add - > "+snapshot.getKey());
+                        Marker marker = mGoogleMap.addMarker(new MarkerOptions()
+                                .title("Conductor Disponible")
+                                .position(new LatLng(Double.parseDouble(snapshot.child("l")
+                                        .child("0").getValue()
+                                        .toString()),
+                                        Double.parseDouble(snapshot.child("l")
+                                                .child("1")
+                                                .getValue()
+                                                .toString())))
+                                .rotation(45)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo)));
 
-                        /** Validacion del radio de 30 km **/
-
-                        Location mDestinoLocation = new Location(LOCATION_SERVICE);
-                        mDestinoLocation.setLongitude(Double.parseDouble(snapshot1.child("l").child("1").getValue()
-                                .toString()));
-                        mDestinoLocation.setLatitude(Double.parseDouble(snapshot1.child("l").child("0")
-                                .getValue().toString()));
-
-                        Log.e("DISTANCE", mLocationMiPos.getLatitude() +" y "+ mLocationMiPos.getLongitude());
-                        Log.e("DISTANCE", mDestinoLocation.getLatitude() +" y "+ mDestinoLocation.getLongitude());
-                        Log.e("DISTANCE", String.valueOf(mLocationMiPos.distanceTo(mDestinoLocation)));
-
-                        if (mLocationMiPos.distanceTo(mDestinoLocation)/ 1000 <= 30)
-                        {
-                            Marker marker = mGoogleMap.addMarker(new MarkerOptions()
-                                    .position(new LatLng(Double.parseDouble(snapshot1.child("l").child("0")
-                                            .getValue().toString()),
-                                            Double.parseDouble(snapshot1.child("l").child("1").getValue()
-                                                    .toString())))
-                                    .title("Conductor Disponible")
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo)));
-                            marker.setTag(snapshot1.getKey());
-                            markerListDriver.add(marker);
-                        }
-
-
+                        marker.setTag(snapshot.getKey());
+                        markerListDriver.add(marker);
+                    }
                 }
-        //Log.e("l",snapshot.child("l").child("0").getValue().toString());
             }
-        }
 
-        @Override
-        public void onCancelled(@NonNull DatabaseError error)
-        {
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName)
+            {
+                /**Datos actualizados**/
+                Log.e("Marker","change -> "+snapshot.getKey());
+                if (snapshot.exists())
+                {
+                    for (Marker marker : markerListDriver)
+                    {
+                        if (marker.getTag().equals(snapshot.getKey()))
+                        {
+                            if (aroundCalc(snapshot))
+                            {
+                                LatLng latLng = new LatLng(Double.parseDouble(snapshot.child("l")
+                                        .child("0").getValue()
+                                        .toString()),
+                                        Double.parseDouble(snapshot.child("l")
+                                                .child("1")
+                                                .getValue()
+                                                .toString()));
+                                marker.setRotation(getBearing(marker.getPosition(),latLng));
+                                marker.setPosition(latLng);
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
 
-        }
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot)
+            {
+                /**Auto eliminado**/
+                Log.e("Marker","remove -> "+snapshot.getKey());
+                if (snapshot.exists())
+                {
+                    for (Marker marker : markerListDriver)
+                    {
+                        if (marker.getTag().equals(snapshot.getKey()))
+                        {
+                            marker.remove();
+                            markerListDriver.remove(marker);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
         });
 
+        /**mGeoFireWorking.getActiveDriver(mLatLng, 30).addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                // AÃ‘ADIREMOS LOS MARCADORES DE LOS CONDUCTORES QUE SE CONECTEN EN LA APLICACION
+
+                for (Marker marker: markerListDriver) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
+                            return;
+                        }
+                    }
+                }
+
+                LatLng driverLatLng = new LatLng(location.latitude, location.longitude);
+                Marker marker = mGoogleMap.addMarker(new MarkerOptions().position(driverLatLng).title("Conductor disponible")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.taxi_rastreo)));
+                marker.setTag(key);
+                markerListDriver.add(marker);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker marker: markerListDriver) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
+                            marker.remove();
+                            markerListDriver.remove(marker);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                // ACTUALIZAR LA POSICION DE CADA CONDUCTOR
+                for (Marker marker: markerListDriver) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
+                            marker.setPosition(new LatLng(location.latitude, location.longitude));
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
+    }***/
+    }
+
+    private boolean aroundCalc(DataSnapshot snapshot)
+    {
+        boolean bandera = false;
+        /** CALCULA LA DISTANCIA ENTRE MI POSICION Y EL DRIVER AGREGADO -> 30 km maximo**/
+
+        Location mDestinoLocation = new Location(LOCATION_SERVICE);
+        mDestinoLocation.setLongitude(Double.parseDouble(snapshot.child("l").child("1").getValue()
+                .toString()));
+        mDestinoLocation.setLatitude(Double.parseDouble(snapshot.child("l").child("0")
+                .getValue().toString()));
+
+        Log.e("DISTANCE", mLocationMiPos.getLatitude() +" y "+ mLocationMiPos.getLongitude());
+        Log.e("DISTANCE", mDestinoLocation.getLatitude() +" y "+ mDestinoLocation.getLongitude());
+        Log.e("DISTANCE", String.valueOf(mLocationMiPos.distanceTo(mDestinoLocation)/1000));
+
+        if ((mLocationMiPos.distanceTo(mDestinoLocation)/ 1000) <= 30)
+        {
+            bandera = true;
+        }
+        return bandera;
     }
 
 }

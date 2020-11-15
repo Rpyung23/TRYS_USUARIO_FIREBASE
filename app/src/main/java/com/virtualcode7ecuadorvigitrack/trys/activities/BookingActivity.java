@@ -115,6 +115,7 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
     private ChildEventListener mChildEventListenerBooking;
     private cProviderSharedUiCondutor mProviderSharedUiConductor;
     private cProviderSharedUiCondutor mProviderSharedUiCondutor;
+    private boolean banderaZoom = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -369,9 +370,13 @@ public class BookingActivity extends AppCompatActivity implements OnMapReadyCall
 
                     mLatLngAnt = new LatLng(lat,lng);
 
-
-                    mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMarkerDriver.getPosition().latitude,mMarkerDriver.getPosition().longitude)
-                            ,17));
+                    if (banderaZoom)
+                    {
+                        banderaZoom=false;
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mMarkerDriver
+                                        .getPosition().latitude,mMarkerDriver.getPosition().longitude)
+                                ,17));
+                    }
                 }
             }
 

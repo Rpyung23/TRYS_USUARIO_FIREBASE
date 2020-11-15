@@ -124,11 +124,14 @@ public class cVolleyNotification
                     {
                         Toasty.success(context,"SOLICITUD ENVIADA",Toasty.LENGTH_LONG)
                                 .show();
-                    }else
+                    }else if(response.getInt("success")==0)
                         {
-                            Toasty.error(context,"SERVER NOTIFICATION ERROR SOLICITUD",Toasty.LENGTH_LONG)
-                                    .show();
-                        }
+                            /**No se envio la solicitud**/
+                        }else
+                            {
+                                Toasty.error(context,"SERVER NOTIFICATION ERROR SOLICITUD "+response.getInt("success"),Toasty.LENGTH_LONG)
+                                        .show();
+                            }
                 } catch (JSONException e)
                 {
                     Toasty.error(context,"TRY CATCH : "+e.getMessage(),Toasty.LENGTH_LONG)
@@ -137,6 +140,90 @@ public class cVolleyNotification
             }
         }
         , new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error)
+            {
+                Toasty.error(context,"SERVER ERROR RESPONSE",Toasty.LENGTH_LONG)
+                        .show();
+                // As of f605da3 the following should work
+                NetworkResponse response = error.networkResponse;
+                if (error instanceof ServerError && response != null) {
+                    try {
+                        String res = new String(response.data,
+                                HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                        // Now you can use any deserializer to make sense of data
+                        JSONObject obj = new JSONObject(res);
+                    } catch (UnsupportedEncodingException e1) {
+                        // Couldn't properly decode data to string
+                        e1.printStackTrace();
+                    } catch (JSONException e2) {
+                        // returned data is not JSONObject?
+                        e2.printStackTrace();
+                    }
+                }
+                //Log.e("VOLEYERROR",error.getMessage().toString());
+            }
+        }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError
+            {
+                HashMap<String,String> hashMap = new HashMap<>();
+                hashMap.put("Content-Type","application/json; charset=utf-8");
+                hashMap.put("Authorization","key=AAAAzly-y3E:APA91bGuoJW3nk44A0Z-Px9xf6wXMDKXlS4iLrVkUTNkFhP10OFrR2d9wvorM-PADwGc45HMCjB3EhVQae6-HDycwtsD4xWCwWWxDwuhEFQI5Meqcq93-QEvDcif4TIJwb1hoP6Znkj6");
+                return hashMap;
+            }
+        };
+        requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    /** METODO CLOUD MESSAGING FIREBASE ENVIO LISTA**/
+    public void createNotificationServerFirebaseList(final List<cSolicitudTaxi> cSolicitudTaxiList,
+                                                     int pos, final int tam)
+    {
+        final int auxpos = pos;
+        Log.e("POS",String.valueOf(pos));
+        String url ="https://fcm.googleapis.com/fcm/send";
+        cSolicitudTaxi OsoSolicitudTaxi = cSolicitudTaxiList.get(pos);
+
+        jsonObjectRequest = new JsonObjectRequest(url, createJSONSEND(OsoSolicitudTaxi),
+                new Response.Listener<JSONObject>()
+                {
+            @Override
+            public void onResponse(JSONObject response)
+            {
+                try {
+                    if (response.getInt("success")==1)
+                    {
+                        Toasty.success(context,"SOLICITUD ENVIADA",Toasty.LENGTH_LONG)
+                                .show();
+                        return;
+                    }else if(response.getInt("success")==0)
+                    {
+                        /**No se envio la solicitud**/
+                        if (auxpos <= (tam-1))
+                        {
+                            int aux = auxpos+1;
+                            createNotificationServerFirebaseList(cSolicitudTaxiList,aux,tam);
+                        }else
+                            {
+                                Toasty.error(context,"CONDUCTORES NO DISPONIBLES",Toasty.LENGTH_LONG)
+                                        .show();
+                                return;
+                            }
+                    }else
+                    {
+                        Toasty.error(context,"SERVER NOTIFICATION ERROR SOLICITUD "+response.getInt("success"),Toasty.LENGTH_LONG)
+                                .show();
+                    }
+                } catch (JSONException e)
+                {
+                    Toasty.error(context,"TRY CATCH : "+e.getMessage(),Toasty.LENGTH_LONG)
+                            .show();
+                }
+            }
+        }
+                , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error)
             {
