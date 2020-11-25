@@ -780,11 +780,28 @@ public class InicioActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
 
                 mRunnableTrazos.run();
-            }
-        }else if(marker.getId().equals(markerIam.getId()))
-        {
 
+                mEditTextMyDestino.setText(GeocoderDestino(markerIamDestino.getPosition()));
+
+            }
         }
+    }
+
+    private String GeocoderDestino(LatLng position)
+    {
+        List<Address>addresses;
+        String detalles = "";
+        if (Geocoder.isPresent())
+        {
+            Geocoder mGeocoder = new Geocoder(getApplicationContext());
+            try {
+                addresses = mGeocoder.getFromLocation(position.latitude,position.longitude,1);
+                detalles = addresses.get(0).getAddressLine(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return detalles;
     }
 
 

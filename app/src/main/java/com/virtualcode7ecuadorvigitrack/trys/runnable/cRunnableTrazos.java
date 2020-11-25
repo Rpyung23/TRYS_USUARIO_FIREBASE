@@ -143,7 +143,8 @@ public class cRunnableTrazos implements Runnable
     {
         initProgressDialog();
         String url_ruta_corta = "https://maps.googleapis.com/maps/api/directions/json?origin="+getLatitud_inicio()
-                +","+getLongitud_inicio()+"&destination="+getLatitud_final()+","+getLongitud_final()+"&key="+getContext().getString(R.string.api_key_google_maps);
+                +","+getLongitud_inicio()+"&destination="+getLatitud_final()+","+getLongitud_final()+"" +
+                "&key="+getContext().getString(R.string.api_key_google_maps)+"&mode=driving";
         Log.e("URLRUTATRAZO",url_ruta_corta);
         jsonObjectRequest = new JsonObjectRequest(url_ruta_corta, null, new Response.Listener<JSONObject>()
         {
